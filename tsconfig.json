@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "target": "es5",
+    "lib": [ "es2017", "DOM", "es6" ],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,    
+    "baseUrl": "./src"
+  },
+  "filesGlob": [
+    "**/*.ts"
+  ]
+}

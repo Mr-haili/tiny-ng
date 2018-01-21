@@ -1,0 +1,29 @@
+{
+  "name": "aaa-ng",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "build": "webpack -w",
+    "test": "jasmine-ts \"test/**/*.spec.ts\""
+  },
+  "author": "aaa",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/core-js": "^0.9.42",
+    "@types/jasmine": "^2.8.2",
+    "@types/node": "^8.0.53",
+    "@types/reflect-metadata": "0.0.5",
+    "awesome-typescript-loader": "^3.2.1",
+    "jasmine": "^2.8.0",
+    "jasmine-ts": "^0.2.1",
+    "ts-node": "^3.3.0",
+    "tsconfig-paths": "^2.4.0",
+    "typescript": "^2.6.1",
+    "typings": "^2.1.1"
+  },
+  "dependencies": {
+    "core-js": "^2.4.1",
+    "reflect-metadata": "^0.1.10"
+  }
+}
