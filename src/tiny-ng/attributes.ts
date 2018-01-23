@@ -36,18 +36,12 @@ function isStructuralAttrName(name: string){
 export class Attributes {
 	// 方便后面处理directive的时候查询
 	readonly tagName: string;
-	readonly bounds: { [name: string]: Bound };
 
 	readonly inputBoundsTable: { [name: string]: Bound } = {};
 	readonly outputBoundsTable: { [name: string]: Bound } = {};
 
 	readonly nativeInputBoundsTable: { [name: string]: Bound } = {};
 	readonly nativeOutputBoundsTable: { [name: string]: Bound } = {};
-
-	// // 结构性指令的支持
-	// readonly hasStructuralBounds: boolean = false;
-	// readonly structuralBounds: { [name: string]: Bound };
-	// readonly structuralBounds: { [name: string]: Bound } 
 
 	// 这里用来保存 attrName-attrValue的键值对
 	private _attrs: Map<string, string> = new Map();
@@ -67,6 +61,7 @@ export class Attributes {
 	/*
 	 * 写的太急, 这里逻辑写的是有点混乱
 	 * 按照isPreprocessingStructuralDirective对dom上的属性进行预处理
+	 * 对结构型指令同时进行改写 *ng-if -> [ng-if]
 	 */
 	private _preprocessingDomAttrs(element: HTMLElement, isPreprocessingStructuralDirective: boolean): Map<string, string> {
 		const domAttrs: Attr[] = Array.prototype.slice.call(element.attributes),
@@ -76,7 +71,8 @@ export class Attributes {
 			if(isStructural) 
 			{
 				if(!isPreprocessingStructuralDirective) return;
-				attrsMap.set(attr.name.slice(1), attr.value.trim());
+				attrsMap.set(`[${ attr.name.slice(1) }]`, attr.value);
+				element.removeAttribute(attr.name); // 移除结构型指令的属性这里是不是应该交给compiler来做
 			}
 			else
 			{
@@ -88,7 +84,10 @@ export class Attributes {
 		return attrsMap;
 	}
 
-	// ngModel实际上是一个语法糖, 这里做了一些改写的工作, 这里直接写死的判断, 不是一个太好的写法
+	/*
+	 * ngModel实际上是一个语法糖, 这里做了一些改写的工作,
+	 * TODO 这里直接写死的判断而且太特殊了, 不是一个太好的写法
+	 */
 	private _rewriteNgModel(element: HTMLElement, attrs: Map<string, string>): void {
 		const ngModelSelector = '[(ng-model)]';
 		if(!(element instanceof HTMLInputElement)) return;

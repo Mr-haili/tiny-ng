@@ -2,7 +2,6 @@
  * copy from https://github.com/angular/angular.js/blob/master/test/ng/parseSpec.js
  * ~\(≧▽≦)/~
  */
-
 // todo 这里路劲迟早要改的, 整个项目的文件结构有点乱
 import { $parse } from '../src/main';
 import { Scope } from '../src/main';

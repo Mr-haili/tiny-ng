@@ -1,5 +1,6 @@
 import { Directive } from 'tiny-ng/core';
 import { EventEmitter } from 'tiny-ng/core/observable';
+import { ViewContainer } from 'tiny-ng/ng2/view-container';
 
 @Directive({
 	selector: 'ngModel',
@@ -62,6 +63,38 @@ export class NgColor {
 		this._elem.style.color = color;
 	}
 }
+
+@Directive({
+	selector: 'ngIf',
+	inputs: ['ngIf']
+})
+export class NgIf {
+	constructor(readonly viewContainer: ViewContainer){ }
+
+	set ngIf(value: any){
+		if(value) 
+		{
+			this.viewContainer.createEmbeddedView();
+		}
+		else
+		{
+			this.viewContainer.clear();
+		}
+	}
+}
+
+@Directive({
+	selector: 'ngFor',
+	inputs: ['ngFor']
+})
+export class NgFor {
+	constructor(readonly viewContainer: ViewContainer){ }
+
+	set ngFor(value: any){
+		console.log('触发ngFor', value);
+	}
+}
+
 
 // @Directive({
 // 	selector: 'ngClick',

@@ -2,7 +2,7 @@ import { View, Binding } from './view';
 import { ViewContainer } from './view-container';
 import { ExprFn, ActionFn } from '../types';
 import { Attributes, Bound, BoundType } from '../attributes';
-import { Directive, Component } from 'tiny-ng/core';
+import { Directive, Provider } from 'tiny-ng/core';
 import { DirectiveFactory, ViewFactory } from './view-factory';
 import { NgInterpolate } from 'tiny-ng/common/directives';
 import $interpolate from '../interpolate';
@@ -36,9 +36,14 @@ function isBooleanAttribute(node: Node, attrName: string) {
 }
 
 type CompileFn = (node: Node, attrs: Attributes) => NodeLinkFn;
+
 export interface NodeLinkFn {
 	(view: View, node: Node) : void,
 	nodeIndex?: number
+}
+
+export interface ViewContainerLinkFn {
+	(view: View, viewContainer: ViewContainer) : void
 }
 
 // 逻辑有点乱♂糟♂糟的
@@ -50,34 +55,35 @@ export class ViewCompiler {
 	private _module: Module;
 	compileComponent(module: Module, element: HTMLElement){
 		const preModule = this._module;
-		this._module = module;
+		this._module = module;		
 		const nodelinkFn = this._compileChildNodes(element);
 		this._module = preModule;
 		return nodelinkFn;
 	}
-
 	private _compileNode(node: Node): NodeLinkFn | null {
 		if(Node.TEXT_NODE === node.nodeType) return compileTextNode(<Text>node);
 		return this._compileElement(node as HTMLElement);
 	}
 
 	/*
-	 * 1. 判断当前element是否是componet, 请求相关服务rende生成对应的组件
-	 * 2. 解析element自身的所有Directive
-	 * 3. 解析element的childNodes
+	 * 1. 判断这个element上是否有结构型指令, 如果有那么必须做特殊处理
+	 * 2. 判断当前element是否是componet
+	 * 3. 解析element自身的所有Directive
+	 * 4. 如果该元素不是组件元素那么, 解析element的childNodes
+	 * 5. 生成对应的nodeLinkFn
 	 */
 	private _compileElement(element: HTMLElement): NodeLinkFn {
-		const attrs: Attributes = new Attributes(element);
-		const structuralAttrs: Attributes = new Attributes(element, true);
+		const structuralAttrs = new Attributes(element, true);
+		if(structuralAttrs.attrNames.length) return this._compileStructuralElement(element, structuralAttrs);
 
-		// 如果有结构型指令, 这里需要创建一个viewContainer作为一个抽象层
-		
+		const attrs: Attributes = new Attributes(element);
+		const viewFactory: ViewFactory | null = this._module.component(element.tagName);		
 		const directivesLinkFn = this._compileDirectivesOnElement(attrs);
-		const childNodesLinkFn = this._compileChildNodes(element);
-		const viewFactory: ViewFactory | null = this._module.component(element.tagName);
+
+		let childNodesLinkFn: NodeLinkFn;
+		if(!viewFactory) childNodesLinkFn = this._compileChildNodes(element);
 
 		function nodeLinkFn(view: View, element: HTMLElement){
-			childNodesLinkFn(view, element);
 			if(directivesLinkFn) directivesLinkFn(view, element);
 
 			// 如果有对应的组件需要显然那么渲染childView, 然后连接到父子view
@@ -87,26 +93,47 @@ export class ViewCompiler {
 				view.children.push(childView);
 				applyDirectiveToElement(view, viewFactory.metadata, childView.context, element, attrs);
 			}
+
+			if(childNodesLinkFn) childNodesLinkFn(view, element);
 		}
 		return nodeLinkFn;
 	}
 
-	// 搜集element上有哪些指令需要处理, 生成对应的链接函数
-	private _compileDirectivesOnElement(attrs: Attributes): NodeLinkFn | null {
-		// 搜集有哪些指令, 生成nodeDirectives处理函数
-		const directiveFactories: DirectiveFactory[] = this._collectDirectives(attrs);
+	private _compileStructuralElement(element: HTMLElement, attrs: Attributes): NodeLinkFn {
+		console.log('结构型指令编译', attrs);
+		const viewContainerLinkFn = this._compileStructuralDirectivesOnElement(attrs);
+    const template: string = element.outerHTML; // 这里需要用outerHTML获取完整的html
+    const viewFactory: ViewFactory = new ViewFactory(this._module, { template });
 
+		function nodeLinkFn(view: View, element: HTMLElement){
+
+			// 替换当前元素为一个Comment作为锚点
+			const anchorElement: Comment = document.createComment('anchor');
+			replaceElement(anchorElement, element);
+
+			const viewContainer: ViewContainer = new ViewContainer(view._context, anchorElement, viewFactory);
+			view.addChild(viewContainer);
+			if(viewContainerLinkFn) viewContainerLinkFn(view, viewContainer);
+		}
+		return nodeLinkFn;
+	}
+
+	// 搜集element上有哪些指令需要处理, 生成对应的link函数
+	private _compileDirectivesOnElement(attrs: Attributes): NodeLinkFn | null {
+		const directiveFactories: DirectiveFactory[] = this._collectDirectives(attrs);
 		function directivesLinkFn(view: View, element: HTMLElement){
 			applyNativeBindingToElement(view, element, attrs);
-
-			_.forEach(directiveFactories, directiveFactory => {
-				let metadata: Directive = directiveFactory.metadata;
-				let ctrl: any = directiveFactory.instantiateCtrl(element);
-				applyDirectiveToElement(view, metadata, ctrl, element, attrs);
-			})
+			applyDirectiveFactories(view, element, attrs, directiveFactories);
 		}
-
 		return directivesLinkFn;
+	}
+
+	private _compileStructuralDirectivesOnElement(attrs: Attributes): ViewContainerLinkFn {
+		const directiveFactories: DirectiveFactory[] = this._collectDirectives(attrs);
+		function viewContainerLinkFn(view: View, viewContainer: ViewContainer){
+			applyDirectiveFactories(view, viewContainer, attrs, directiveFactories);
+		}
+		return viewContainerLinkFn;
 	}
 
 	// 编译一个element的所有子节点
@@ -145,7 +172,7 @@ export class ViewCompiler {
 
 		for(let attrName of attrs.attrNames)
 		{
-			let directiveFactory = module.directive(attrName); 
+			let directiveFactory = module.directive(attrName);
 			if(directiveFactory) directiveFactories.push(directiveFactory);
 		}
 
@@ -183,12 +210,28 @@ function applyNativeBindingToElement(
 	}	
 }
 
-// 根据view及其元数据, 建立ViewModel到View的映射
+function applyDirectiveFactories(
+	view: View,
+	target: HTMLElement | ViewContainer,
+	attrs: Attributes,
+	directiveFactories: DirectiveFactory[]
+){
+	_.forEach(directiveFactories, directiveFactory => {
+		let metadata: Directive = directiveFactory.metadata;
+		let element: HTMLElement | null = (target instanceof HTMLElement) ? target : null;
+		let deps: Provider[] = [];
+		if(target instanceof ViewContainer) deps.push({ provide: ViewContainer, useValue: target });
+		let ctrl: any = directiveFactory.instantiateCtrl(element, deps);
+		applyDirectiveToElement(view, metadata, ctrl, null, attrs);
+	})
+}
+
+// 根据directive的元数据, 建立ViewModel到View的映射, 虽然说是element但是更像是view
 function applyDirectiveToElement(
 	view: View,
 	metadata: Directive,
 	ctrl: any,
-	element: HTMLElement,
+	element: HTMLElement | null,
 	attrs: Attributes
 ){
 	const hostListener: { [eventName: string]: any } = metadata.hostListener || {};
@@ -197,15 +240,18 @@ function applyDirectiveToElement(
 	const bindings: Binding[] = [];
 
 	// 对于host-element事件的绑定
-	for(let eventName in hostListener)
+	if(element)
 	{
-		// console.log('添加callBack', eventName, hostListeners[eventName]);
-		const fn = ctrl[hostListener[eventName]] as Function;
-		if('function' === typeof fn)
+		for(let eventName in hostListener)
 		{
-			element.addEventListener(eventName, () => {
-				fn.apply(ctrl, []);
-			});
+			// console.log('添加callBack', eventName, hostListeners[eventName]);
+			const fn = ctrl[hostListener[eventName]] as Function;
+			if('function' === typeof fn)
+			{
+				element.addEventListener(eventName, () => {
+					fn.apply(ctrl, []);
+				});
+			}
 		}
 	}
 
@@ -253,10 +299,16 @@ function compileTextNode(textNode: Text): NodeLinkFn | null {
   const interpolateFn = $interpolate(textNode.nodeValue);
   if(!interpolateFn) return null;
 
-  const directive = new NgInterpolate(textNode);
-  const binding = new Binding('text', interpolateFn, directive);
-
-	return function link(view: View){
+	return function link(view: View, textNode: Text){
+	  const directive = new NgInterpolate(textNode);
+	  const binding = new Binding('text', interpolateFn, directive);
     view.bind(binding);
 	}
+}
+
+// 替换元素
+function replaceElement(newElement: Node, oldElement: Node): void {
+	const parentElement: HTMLElement = oldElement.parentElement as HTMLElement;
+	if(!parentElement) return;
+	parentElement.replaceChild(newElement, oldElement);
 }

@@ -2,7 +2,7 @@ import { _ } from 'util/util';
 import { Component, Directive, Injector, Provider, Type, ValueProvider, ClassProvider } from 'tiny-ng/core';
 import { ViewFactory, DirectiveFactory } from './view-factory';
 
-// TODO fuck fuck fuck
+// TODO 这里用来识别组件和指令的方式, 有点粗暴
 export const ANNOTATIONS = '__annotations__';
 const METADATA_NAME_DIRECTIVE = 'Directive';
 const METADATA_NAME_COMPONENT = 'Component';
@@ -57,7 +57,7 @@ export class Module {
 		else
 		{
 			this._components.set(selector, type);
-			directiveFactory = new ViewFactory(this, metadata, type);
+			directiveFactory = new ViewFactory(this, metadata as Component, type);
 		}
 		this.injector.register({ provide: type, useValue: directiveFactory });	
 	}

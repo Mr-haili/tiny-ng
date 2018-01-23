@@ -1,13 +1,15 @@
+import { Component } from 'tiny-ng/core';
 import { View } from './view';
 import { Injector } from 'tiny-ng/core/';
+import { ViewFactory } from './view-factory';
+import { Module } from './module';
+import _ from 'util/util';
 
 export class ViewContainer extends View {
-	readonly injector: Injector;
-
 	constructor(
     context: any,
-    readonly anchorElement: HTMLElement,
-		readonly parentInjector: Injector
+    readonly anchorElement: Comment,
+    readonly viewFactory: ViewFactory
 	){
     super(context);
   }
@@ -15,7 +17,10 @@ export class ViewContainer extends View {
   /**
    * Destroys all Views in this container.
    */
-  // abstract clear(): void;
+  clear(): void {
+    const children = this.children;
+    while(children.length) (children.pop() as any).destroy();
+  }
 
   /**
    * Returns the {@link ViewRef} for the View located in this container at the specified index.
@@ -31,51 +36,55 @@ export class ViewContainer extends View {
   	return this.children.length;
   }
 
+  get lastChild(): View {
+    return this.children[this.length - 1];
+  }
+
   /**
    * Instantiates an Embedded View based on the {@link TemplateRef `templateRef`} and inserts it
    * into this container at the specified `index`.
    *
    * If `index` is not specified, the new View will be inserted as the last View in the container.
-   *
-   * Returns the {@link ViewRef} for the newly created View.
    */
-  // abstract createEmbeddedView<C>(templateRef: TemplateRef<C>, context?: C, index?: number):
-  //     EmbeddedViewRef<C>;
+  createEmbeddedView(index?: number): View {
+    const tmpWrapperElement: HTMLElement = document.createElement('div');
+    const view = this.viewFactory.render(tmpWrapperElement);
+
+    // 在这里我们重置一下view的执行上下文和宿主元素
+    console.log('日妈不科学', tmpWrapperElement, '!!!');
+    view._context = this.context;
+    view._hostElement = tmpWrapperElement.firstElementChild as any;
+
+    console.log('创建内嵌View', view);
+    this.insert(view);
+    return view;
+  }
 
   /**
-   * Instantiates a single {@link Component} and inserts its Host View into this container at the
-   * specified `index`.
-   *
-   * The component is instantiated using its {@link ComponentFactory} which can be
-   * obtained via {@link ComponentFactoryResolver#resolveComponentFactory}.
+   * Inserts a View identified into the container at the specified `index`.
    *
    * If `index` is not specified, the new View will be inserted as the last View in the container.
    *
-   * You can optionally specify the {@link Injector} that will be used as parent for the Component.
-   *
-   * Returns the {@link ComponentRef} of the Host View created for the newly instantiated Component.
+   * Returns the inserted View.
    */
-  // abstract createComponent<C>(
-  //     componentFactory: ComponentFactory<C>, index?: number, injector?: Injector,
-  //     projectableNodes?: any[][], ngModule?: NgModuleRef<any>): ComponentRef<C>;
+  insert(view: View, index?: number): View {
+    console.log('!!!!!!!!viewContainer: ', view, index);
+    if(0 === this.length)
+    {
+      insertAfter(view._hostElement, this.anchorElement);
+    }
+    else if(!index || index >= this.length)
+    {
+      insertAfter(view._hostElement, this.lastChild._hostElement);
+    }
+    else
+    {
+      insertAfter(view._hostElement, (this.get(index) as View)._hostElement);
+    }
+    this.addChild(view);
+  	return view;
+  }
 
-  /**
-   * Inserts a View identified by a {@link ViewRef} into the container at the specified `index`.
-   *
-   * If `index` is not specified, the new View will be inserted as the last View in the container.
-   *
-   * Returns the inserted {@link ViewRef}.
-   */
-  // insert(view: View, index?: number): View {
-
-  // 	return this.view;
-  // }
-
-  /**
-   * Moves a View identified by a {@link ViewRef} into the container at the specified `index`.
-   *
-   * Returns the inserted {@link ViewRef}.
-   */
   // abstract move(view: View, currentIndex: number): View;
 
 
@@ -88,7 +97,9 @@ export class ViewContainer extends View {
    *
    * If `index` is not specified, the last View in the container will be removed.
    */
-  // abstract remove(index?: number): void;
+  remove(index?: number): void {
+
+  }
 
   /**
    * Use along with {@link #insert} to move a View within the current container.
@@ -97,3 +108,23 @@ export class ViewContainer extends View {
    */
   // abstract detach(index?: number): View | null;
 }
+
+function insertAfter(newElement: Node, targetElement: Node){
+  console.log('插插插', newElement, targetElement);
+
+  if(!targetElement || !targetElement.parentElement) return;
+  const parent = targetElement.parentElement;
+
+  if(parent.lastChild === targetElement)
+  {
+    parent.appendChild(newElement);
+  }
+  else
+  {
+    parent.insertBefore(newElement, targetElement.nextSibling);
+  }
+}
+
+
+
+

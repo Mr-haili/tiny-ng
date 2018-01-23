@@ -36,12 +36,17 @@ class Binding {
 class View {
 	private static _debug: boolean = false;
 	root: View = this;
+	_hostElement: HTMLElement;
 
 	private _afterDetectChangesTaskQueue: Function[] = [];
 	bindings: Binding[] = [];
 	readonly children: View[] = [];
 
-	constructor(readonly context: any){ }
+	constructor(public _context: any){ }
+
+	get context(): any {
+		return this._context;
+	}
 
 	addChild(child: View): void {
 		child.root = this.root;
@@ -67,7 +72,7 @@ class View {
   	}
 
   	_.forEach(this.bindings, (binding: Binding) => {
-  		binding.check(this.context);
+  		binding.check(this._context);
   	});
 
   	_.forEach(this.children, childView => { 
@@ -80,6 +85,12 @@ class View {
 
   addAfterDetectChangesTask(fn: Function){ 
   	this._afterDetectChangesTaskQueue.push(fn);
+  }
+
+  // TODO 不完善
+  destroy(){
+  	const parentElement = this._hostElement.parentElement;
+  	if(parentElement) parentElement.removeChild(this._hostElement);
   }
 }
 
