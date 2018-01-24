@@ -25,10 +25,10 @@ console.log('-------');
 // console.log('------------------');
 // console.log(parser.parseTable.print());
 
-console.log('!!!!!!!!!!!!!!!!!');
-const setsGenerator: any = parser.parseTable.setsGenerator;
-const astOptimizer = new AstOptimizer();
-console.log('************************');
+// console.log('!!!!!!!!!!!!!!!!!');
+// const setsGenerator: any = parser.parseTable.setsGenerator;
+// const astOptimizer = new AstOptimizer();
+// console.log('************************');
 
 const env = { 
 	sum: (a: number, b: number) => { return a + b; },
@@ -46,11 +46,9 @@ const env = {
 // [{b: 1}, 2]
 // const text: string = "true && false";
 // TODO BUG [1,2,3].slice(2)
-const text: any = 'a';
-
-console.log(parser.lexer.tokenize(text));
-const ast: Ast = parser.parse(text);
-const niceAst: Ast = astOptimizer.optimize(ast);
+// const text: any = 'a';
+// const ast: Ast = parser.parse(text);
+// const niceAst: Ast = astOptimizer.optimize(ast);
 
 // console.log('------源代码------');
 // console.log(text);

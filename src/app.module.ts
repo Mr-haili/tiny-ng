@@ -36,7 +36,7 @@ export class HeroComponent {
   		<div (click)="add()">+1S!!!</div>
   		<div (click)="dec()">-1S!!!</div>
 
-  		<div *let-value-id="'num'" *ng-for="list">
+  		<div *ng-for="let num of list">
   			干♂死 孙乐 {{ num }}
   		</div>
     `

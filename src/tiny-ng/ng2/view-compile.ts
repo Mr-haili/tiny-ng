@@ -176,7 +176,6 @@ export class ViewCompiler {
 			let directiveFactory = module.directive(attrName);
 			if(directiveFactory) directiveFactories.push(directiveFactory);
 		}
-
 		return directiveFactories;
 	}
 }

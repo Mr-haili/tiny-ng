@@ -87,17 +87,16 @@ export class NgIf {
 
 @Directive({
 	selector: 'ngFor',
-	inputs: ['letValueId', 'letKeyId', 'ngFor']
+	inputs: ['letValueId', 'letKeyId', 'ngForOf']
 })
 export class NgFor {
-	ngForOf: string;
 	letValueId: string;
 	letKeyId: string;
 
 	constructor(readonly viewContainer: ViewContainer){ }
 
 
-	set ngFor(list: any){
+	set ngForOf(list: any){
 		const viewContainer = this.viewContainer,
 			expectChildCount = list.length,
 			letValueId = this.letValueId;

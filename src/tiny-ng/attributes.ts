@@ -81,6 +81,7 @@ export class Attributes {
 			}
 		})
 		this._rewriteNgModel(element, attrsMap);
+		this._rewriteNgFor(attrsMap);
 		return attrsMap;
 	}
 
@@ -97,6 +98,29 @@ export class Attributes {
 
 		attrs.set('[ng-model]', expression);
 		attrs.set('(ng-model-change)', `${ expression } = $event`);
+	}
+
+	/*
+   * ngFor作为结构型指令, 需要提供语法糖, 这里做一下改写, 
+   * 下面是ng2中语法的等价写法, 这里我们做类似的改写:
+	 *
+	 * <li *ngFor="let item of items">...</li>
+	 *
+	 * <ng-template ngFor let-item [ngForOf]="items" let-i="index" [ngForTrackBy]="trackByFn">
+	 *   <li>...</li>
+	 * </ng-template>
+	 *
+	 */ 
+	private _rewriteNgFor(attrs: Map<string, string>): void {
+		const ngForSelector = '[ng-for]';
+		const expression = attrs.get(ngForSelector);
+		if(!expression || 0 == expression.length) return;
+		attrs.delete(ngForSelector);
+
+		const chunks = expression.split(/\s/);
+		attrs.set('ngFor', '');
+		attrs.set('[letValueId]', `'${ chunks[1] }'`);		
+		attrs.set('[ngForOf]', chunks[3]);
 	}
 
 	private _analyseAttrs(attrs: Map<string, string>): void {
