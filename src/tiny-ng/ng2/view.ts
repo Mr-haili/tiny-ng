@@ -42,7 +42,7 @@ class View {
 
 	private _afterDetectChangesTaskQueue: Function[] = [];
 	bindings: Binding[] = [];
-	readonly children: View[] = [];
+	_children: View[] = [];
 
 	constructor(
 		public _context: any, 
@@ -58,8 +58,9 @@ class View {
 	}
 
 	addChild(child: View): void {
-		child.root = this.root;
-		this.children.push(child);
+		// 递归遍历child的所有子孙重置root
+		setRootOfView(child, this.root);
+		this._children.push(child);
 		child.locals.__proto__ = this.locals;
 	}
 
@@ -85,7 +86,7 @@ class View {
   		binding.check(this.context, this.locals);
   	});
 
-  	_.forEach(this.children, childView => { 
+  	_.forEach(this._children, childView => { 
   		childView.detectChanges();
   	});
 
@@ -102,6 +103,13 @@ class View {
   	const parentElement = this._hostElement.parentElement;
   	if(parentElement) parentElement.removeChild(this._hostElement);
   }
+}
+
+function setRootOfView(view: View, root: View){
+	view.root = root;
+	_.forEach(view._children, childView => {
+		setRootOfView(childView, root);
+	});	
 }
 
 export { View, Binding };

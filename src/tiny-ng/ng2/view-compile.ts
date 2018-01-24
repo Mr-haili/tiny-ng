@@ -90,7 +90,7 @@ export class ViewCompiler {
 			if(viewFactory)
 			{
 				const childView: View = viewFactory.render(element);
-				view.children.push(childView);
+				view.addChild(childView);
 				applyDirectiveToElement(view, viewFactory.metadata, childView.context, element, attrs);
 			}
 
@@ -204,7 +204,14 @@ function applyNativeBindingToElement(
 		const exprFn = $parse(expression);
 
 		element.addEventListener(eventName, (event: Event) => {
-			exprFn(view.context, { $event: event });
+			view.locals.$event = event;
+			try{
+				exprFn(view.context, view.locals);
+			}catch(e){
+				throw(e);
+			}finally{
+				delete view.locals.$event;
+			}
 			view.root.detectChanges();
 		});
 	}	

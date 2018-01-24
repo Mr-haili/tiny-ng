@@ -10,60 +10,68 @@ export class Hero {
   name: string;
 }
 
+const HEROES: Hero[] = [
+  { id: 11, name: 'Mr. Nice' },
+  { id: 12, name: 'Narco' },
+  { id: 13, name: 'Bombasto' },
+  { id: 14, name: 'Celeritas' },
+  { id: 15, name: 'Magneta' },
+  { id: 16, name: 'RubberMan' },
+  { id: 17, name: 'Dynama' },
+  { id: 18, name: 'Dr IQ' },
+  { id: 19, name: 'Magma' },
+  { id: 20, name: 'Tornado' }
+];
+
 @Component({
-  selector: 'hero',
+  selector: 'hero-detail',
   template: `
-    <h1>{{title}}</h1>
-    <h2>{{hero.name}} details!</h2>
-    <div><label>id: </label>{{hero.id}}</div>
-    <div>
-      <label>name: </label>
-      <input [(ng-model)]="hero.name" placeholder="name">
+    <div *ng-if="hero">
+      <h2>{{hero.name}} details!</h2>
+      <div><label>id: </label>{{hero.id}}</div>
+      <div>
+        <label>name: </label>
+        <input [(ng-model)]="hero.name" placeholder="name"/>
+      </div>
     </div>
-    `
+  `,
+  inputs: ['hero']
 })
-export class HeroComponent {
-  title = 'Tour of Heroes';
-  hero: Hero = {
-    id: 1,
-    name: 'Windstorm'
-  };
+export class HeroDetailComponent {
+  hero: Hero;
 }
 
 @Component({
   selector: 'my-app',
   template: `
-  		<div (click)="add()">+1S!!!</div>
-  		<div (click)="dec()">-1S!!!</div>
+    <h1>{{title}}</h1>
+    <h2>My Heroes</h2>
 
-  		<div *ng-for="let num of list">
-  			干♂死 孙乐 {{ num }}
-  		</div>
-    `
+    <ul class="heroes">
+      <li *ng-for="let hero of heroes"
+        [class.selected]="hero === selectedHero"
+        (click)="onSelect(hero)">
+        <span class="badge">{{hero.id}}</span> {{hero.name}}
+      </li>    
+    </ul>
+
+    <hero-detail class="hero-detail" [hero]="selectedHero"></hero-detail>
+  `
 })
 export class AppComponent {
-	isShow: boolean = false;
   title = 'Tour of Heroes';
-  list = [1,2,3,4,5];
+  heroes = HEROES;
+  selectedHero: Hero;
 
-  show(){
-  	this.isShow = !this.isShow;
-  	console.log('点点点', this.isShow);
-  }
-
-  add(){
-  	this.list.push(this.list.length);
-  }
-
-  dec(){
-  	this.list.pop();
+  onSelect(hero: Hero): void {
+    this.selectedHero = hero;
   }
 }
 
 const moduleConfig: ModuleConfig = {
 	declarations: [ 
 		NgClass, NgColor, NgModel, NgIf, NgFor, 
-		AppComponent, HeroComponent
+		AppComponent, HeroDetailComponent
 	]
 }
 const module = new Module(moduleConfig);

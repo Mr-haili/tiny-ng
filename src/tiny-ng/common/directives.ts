@@ -74,13 +74,12 @@ export class NgIf {
 	constructor(readonly viewContainer: ViewContainer){ }
 
 	set ngIf(value: any){
-		if(value) 
-		{
-			this.viewContainer.createEmbeddedView();
-		}
-		else
+		if(!value)
 		{
 			this.viewContainer.clear();
+		}
+		else if(0 === this.viewContainer.length){
+			this.viewContainer.createEmbeddedView();
 		}
 	}
 }

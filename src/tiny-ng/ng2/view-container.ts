@@ -19,7 +19,7 @@ export class ViewContainer extends View {
    * Destroys all Views in this container.
    */
   clear(): void {
-    const children = this.children;
+    const children = this._children;
     while(children.length) (children.pop() as any).destroy();
   }
 
@@ -27,18 +27,18 @@ export class ViewContainer extends View {
    * Returns the {@link ViewRef} for the View located in this container at the specified index.
    */
   get(index: number): View | null {
-  	return this.children[index];
+  	return this._children[index];
   }
 
   /**
    * Returns the number of Views currently attached to this container.
    */
   get length(): number {
-  	return this.children.length;
+  	return this._children.length;
   }
 
   get lastChild(): View {
-    return this.children[this.length - 1];
+    return this._children[this.length - 1];
   }
 
   /**
@@ -89,7 +89,7 @@ export class ViewContainer extends View {
   // abstract move(view: View, currentIndex: number): View;
 
   indexOf(view: View): number {
-  	return this.children.indexOf(view);
+  	return this._children.indexOf(view);
   }
 
   /**
@@ -99,11 +99,11 @@ export class ViewContainer extends View {
    */
   remove(index?: number): void {
     if(0 === this.length) return;
-    const children = this.children;
+    const children = this._children;
 
     if(!index || index >= this.length)
     {
-      let childView = this.children.pop();
+      let childView = this._children.pop();
       (childView as any).destroy();
     }
   }
