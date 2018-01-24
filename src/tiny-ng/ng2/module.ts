@@ -8,7 +8,7 @@ const METADATA_NAME_DIRECTIVE = 'Directive';
 const METADATA_NAME_COMPONENT = 'Component';
 
 export interface ModuleConfig {
-	providers?: Provider[]
+	providers?: Array<Provider | Type<any>>
 	declarations?: Array<Type<any>>
 	imports?: Array<Type<any> | Module>
 	exports?: Array<Type<any> | any[]>
@@ -31,10 +31,21 @@ export class Module {
 		_.forEach(moduleConfig.declarations || [], (type: Type<any>) => {
 			this.declare(type);
 		});
+		_.forEach(moduleConfig.providers || [], (providerOrType: Provider | Type<any>) => {
+			this.provider(providerOrType);
+		});
 	}
 
-	provider(type: Type<any>) {
-		this.injector.register({ provide: type, useClass: type });
+	provider(providerOrType: Provider | Type<any>) {
+		if((providerOrType as Provider).provide) 
+		{
+			this.injector.register(providerOrType as Provider);
+		}
+		else
+		{
+			const type = providerOrType as Type<any>;
+			this.injector.register({ provide: type, useClass: type });
+		}
 	}
 
 	// 用于声明一个directive

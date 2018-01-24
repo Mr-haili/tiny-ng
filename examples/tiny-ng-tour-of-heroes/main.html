@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>tour of heroes</title>
+	<script src="./dist/app.bundle.js"></script>  
+	<link href="./styles/app.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+	<div id="container"></div>
+</body>
+</html>
+
+<script type="text/javascript">
+	var container = document.getElementById('container');
+
+	console.log('渲染组件');
+	view = window.viewFactory.render(container);
+	view.detectChanges();
+</script>

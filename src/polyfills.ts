@@ -2,6 +2,11 @@
 export {};
 
 import 'reflect-metadata';
+import 'core-js/es6/array';
+import 'core-js/es6/map';
+import 'core-js/es6/set';
+import 'core-js/es6/string';
+import 'core-js/es6/symbol';
 
 // 扩展的集合运算: 并集, 交集, 差集
 declare global {

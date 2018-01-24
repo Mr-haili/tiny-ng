@@ -7,11 +7,12 @@ function resolve(dir){
 
 module.exports = {
   entry: {
-    app: './src/main.ts'
+    'dist/app': './src/main.ts',
+    'examples/tiny-ng-tour-of-heroes/dist/app': './examples/tiny-ng-tour-of-heroes/src/app.module'
   },
   output: {
-    filename: "bundle.js",
-    path: path.resolve(__dirname, './dist'),
+    filename: "[name].bundle.js",
+    path: path.resolve(__dirname, './')
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".json"],

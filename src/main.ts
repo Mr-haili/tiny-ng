@@ -1,9 +1,5 @@
-import 'core-js/es6/array';
-import 'core-js/es6/map';
-import 'core-js/es6/set';
-import 'core-js/es6/string';
-import 'core-js/es6/symbol';
 import './polyfills';
+
 import { Ast } from 'compile-util/tree';
 
 import Interpreter from 'compile-util/ast-interpreter/interpreter';
@@ -84,6 +80,4 @@ const env = {
 // import { DomElementSchemaRegistry } from 'tiny-ng/dom-elemens-schema-registry';
 // const a = new DomElementSchemaRegistry();
 // console.log(a._schema['a'], a._schema['unknown']);
-
-import './app.module';
 
