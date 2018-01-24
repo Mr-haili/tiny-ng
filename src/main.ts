@@ -48,9 +48,9 @@ const env = {
 // TODO BUG [1,2,3].slice(2)
 const text: any = 'a';
 
-// console.log(parser.lexer.tokenize(text));
-// const ast: Ast = parser.parse(text);
-// const niceAst: Ast = astOptimizer.optimize(ast);
+console.log(parser.lexer.tokenize(text));
+const ast: Ast = parser.parse(text);
+const niceAst: Ast = astOptimizer.optimize(ast);
 
 // console.log('------源代码------');
 // console.log(text);

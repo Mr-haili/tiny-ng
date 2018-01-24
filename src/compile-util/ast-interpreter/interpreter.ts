@@ -12,13 +12,17 @@ import {
 
 import Reference from './reference';
 
+function isNil(x: any): boolean {
+	return x == null;
+}
+
 export class Interpreter implements AstVisitor {
 	private _env: any; // 求值环境
 	private _locals: any;
 
 	private _result: any;
 
-	exec(ast: Ast | null, env: any = {}, locals: any = {}): any {
+	exec(ast: Ast | null, env: any = {}, locals?: any): any {
 		if(null == ast) return null;
 
 		this._env = env;
@@ -46,10 +50,10 @@ export class Interpreter implements AstVisitor {
 		const name: string = ref.name;
 
 		// todo 这里在查询下, js的取值策略略神奇
-		if(null == base) return undefined; // ref is unresolvable, 没办法自动初始化了
+		if(isNil(base)) return undefined; // ref is unresolvable, 没办法自动初始化了
 
 		// ref is resolvable 那么判断一下value是否存在, 如果value不存在并且isCreateOnFly为真, 初始化为{}
-		if(null == base[name] && isCreateOnFly) base[name] = {}; 
+		if(isNil(base[name]) && isCreateOnFly) base[name] = {}; 
 		return base[name];
 	}
 
@@ -350,7 +354,7 @@ export class Interpreter implements AstVisitor {
 		if(expression instanceof Identifier)
 		{
 			name = expression.name;
-			base = this._locals[name] ? this._locals : this._env;
+			base = isNil(this._locals[name]) ? this._env : this._locals;
 		}
 
 		if(expression instanceof MemberExpression)

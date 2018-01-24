@@ -1,19 +1,17 @@
-import Scope from './scope';
-
 /*
  * literal: 基础类型以及数组与对象字面量
  *
  * constant: 所有的基础类型, 以及成员全部是基础类型的容器类型
  */
 interface ExprFn {
-	(scope?: Scope, locals?: any) : any,
+	(scope?: any, locals?: any) : any,
 	expression?: string,
 	literal?: boolean,
 	constant?: boolean,
 	$$watchDelegate?: Function
 };
 
-type ActionFn = (newValue: any, oldValue: any, scope?: Scope) => any;
+type ActionFn = (newValue: any, oldValue: any, scope?: any) => any;
 
 const initWatchVal = () => {};
 
@@ -39,7 +37,7 @@ class Watcher {
 		this.newValue = newValue;
 	}
 
-	update(scope?: Scope): void {
+	update(scope?: any): void {
 		this.listenerFn(this.newValue, this.oldValue, scope);
 	}
 }

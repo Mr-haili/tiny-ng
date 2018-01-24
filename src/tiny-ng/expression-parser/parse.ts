@@ -6,7 +6,6 @@ import { ESTree, Expression, Constant } from 'compile-util/ast-trees';
 import parser from './expression-grammar-config';
 
 import { ExprFn, ActionFn } from 'tiny-ng/types';
-import Scope from 'tiny-ng/scope';
 
 const interpreter = new Interpreter();
 const astOptimizer = new AstOptimizer();
@@ -19,21 +18,23 @@ export function $parse(expr: string): ExprFn {
 
 	// TODO 这里应该弄成不可更改的
 	const exprFn: ExprFn = Object.assign(
-		(environment?: any, locals?: any) => interpreter.exec(ast, environment, locals), 
+		function(env: any, locals: any){
+			return interpreter.exec(ast, env, locals);
+		},
 		{ expression: expr, literal: isLiteral(ast), constant: isConstant(ast) },
 	);
 
-	if(exprFn.constant) exprFn.$$watchDelegate = constantWatchDelegate;
+	// if(exprFn.constant) exprFn.$$watchDelegate = constantWatchDelegate;
 	return exprFn;
 }
 
-function constantWatchDelegate(scope: Scope, listenerFn: ActionFn, valueEq: boolean, watchFn: ExprFn){
-	const unwatch = scope.$watch(<ExprFn>((scope: Scope) => {
-		unwatch();
-		return watchFn(scope);
-	}), listenerFn, valueEq);
-	return unwatch;
-}
+// function constantWatchDelegate(scope: Scope, listenerFn: ActionFn, valueEq: boolean, watchFn: ExprFn){
+// 	const unwatch = scope.$watch(<ExprFn>((scope: Scope) => {
+// 		unwatch();
+// 		return watchFn(scope);
+// 	}), listenerFn, valueEq);
+// 	return unwatch;
+// }
 
 // 用于判断一颗Ast是否是字面量
 const LiteralExpressTypes: ReadonlyArray<string> = [

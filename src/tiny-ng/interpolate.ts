@@ -13,8 +13,8 @@ function stringify(value: any) {
 	}
 }
 
-export function $interpolate(text: string | null): ExprFn | null {
-	if(!text) return null;
+export function $interpolate(text: string): ExprFn | null {
+	if(_.isNil(text)) return null;
 
 	const parts: Array<string | ExprFn> = [];
 	const expressions: string[] = [];
@@ -43,7 +43,7 @@ export function $interpolate(text: string | null): ExprFn | null {
 			expressionPositions.push(parts.length);
 			parts.push(expFn);
 
-			index = endIndex + 2;      
+			index = endIndex + 2;
 		}
 		else
 		{
@@ -54,7 +54,7 @@ export function $interpolate(text: string | null): ExprFn | null {
 	}
 
 	function compute(values: Array<any>): string {
-		_.forEach(values, function(value: any, i: number) {
+		_.forEach(values, function(value: any, i: number){
 			parts[expressionPositions[i]] = stringify(value);
 		});
 		return parts.join('');
@@ -62,9 +62,9 @@ export function $interpolate(text: string | null): ExprFn | null {
 
 	if(expressions.length){
 		// 实际上这个函数并没有被调用
-		const interpolationFn: ExprFn = function(context: any){
+		const interpolationFn: ExprFn = function(context: any, locals: any){
 			var values = expressionFns.map(expressionFn => {
-				return expressionFn(context);
+				return expressionFn(context, locals);
 			});
 			return compute(values);
 		}

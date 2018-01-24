@@ -100,8 +100,8 @@ export class ViewCompiler {
 	}
 
 	private _compileStructuralElement(element: HTMLElement, attrs: Attributes): NodeLinkFn {
-		console.log('结构型指令编译', attrs);
-		const viewContainerLinkFn = this._compileStructuralDirectivesOnElement(attrs);
+		console.log('结构型指令编译: ', attrs.attrNames, attrs);
+		const viewContainerLinkFn = this._compileStructuralDirectivesOnViewContainer(attrs);
     const template: string = element.outerHTML; // 这里需要用outerHTML获取完整的html
     const viewFactory: ViewFactory = new ViewFactory(this._module, { template });
 
@@ -111,7 +111,7 @@ export class ViewCompiler {
 			const anchorElement: Comment = document.createComment('anchor');
 			replaceElement(anchorElement, element);
 
-			const viewContainer: ViewContainer = new ViewContainer(view._context, anchorElement, viewFactory);
+			const viewContainer: ViewContainer = new ViewContainer(anchorElement, viewFactory, view._context);
 			view.addChild(viewContainer);
 			if(viewContainerLinkFn) viewContainerLinkFn(view, viewContainer);
 		}
@@ -128,12 +128,13 @@ export class ViewCompiler {
 		return directivesLinkFn;
 	}
 
-	private _compileStructuralDirectivesOnElement(attrs: Attributes): ViewContainerLinkFn {
+	// TODO !!! 这里结构改一下, 现在代码有点乱, 结构也不清晰
+	private _compileStructuralDirectivesOnViewContainer(attrs: Attributes): ViewContainerLinkFn {
 		const directiveFactories: DirectiveFactory[] = this._collectDirectives(attrs);
-		function viewContainerLinkFn(view: View, viewContainer: ViewContainer){
+		function structuralDirectivesLinkFn(view: View, viewContainer: ViewContainer){
 			applyDirectiveFactories(view, viewContainer, attrs, directiveFactories);
 		}
-		return viewContainerLinkFn;
+		return structuralDirectivesLinkFn;
 	}
 
 	// 编译一个element的所有子节点
@@ -257,7 +258,7 @@ function applyDirectiveToElement(
 
 	// inputs的处理, 创建对应的binding
 	_.forEach(inputs, (propName: string) => {
-		const bound: Bound = attrs.getInputBound(propName);
+		const bound: Bound = attrs.getInputBound(propName);		
 		if(!bound) return true;
 		const expression = bound.expression;
 		if(expression){
@@ -296,7 +297,7 @@ function applyDirectiveToElement(
 }
 
 function compileTextNode(textNode: Text): NodeLinkFn | null {
-  const interpolateFn = $interpolate(textNode.nodeValue);
+  const interpolateFn = $interpolate(textNode.nodeValue as string);
   if(!interpolateFn) return null;
 
 	return function link(view: View, textNode: Text){

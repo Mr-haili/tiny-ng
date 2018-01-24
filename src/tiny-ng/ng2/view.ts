@@ -18,14 +18,16 @@ class Binding {
 		this.expression = watchFn.expression || '';
 	}
 
-  check(context: any): void {
+  check(context: any, locals: any): void {
   	if(!_.isObject(context)) return;
 		const target: any = this.target;
+
 		try{
-			const newValue = this.watchFn(context);
-			if(newValue !== this.oldValue){
-				target[this.targetProp] = this.oldValue = newValue;	
-			}
+			const newValue = this.watchFn(context, locals);
+
+			// TODO 这里这种做法效率非常的低	
+			if(!_.isObject(newValue) && newValue === this.oldValue) return;
+			target[this.targetProp] = this.oldValue = newValue;
 		}catch(e){
 			// throw new Error(`Error in ${this.expr.line}:${this.expr.col}:${e.message}`);
 			console.error(`表达式: ${ this.expression } 求值出错: ${ e.message }`);
@@ -42,15 +44,23 @@ class View {
 	bindings: Binding[] = [];
 	readonly children: View[] = [];
 
-	constructor(public _context: any){ }
+	constructor(
+		public _context: any, 
+		public _locals: any = {}
+	){ }
 
 	get context(): any {
 		return this._context;
 	}
 
+	get locals(): any {
+		return this._locals;
+	}
+
 	addChild(child: View): void {
 		child.root = this.root;
 		this.children.push(child);
+		child.locals.__proto__ = this.locals;
 	}
 
 	bind(binding: Binding): Function {
@@ -72,11 +82,11 @@ class View {
   	}
 
   	_.forEach(this.bindings, (binding: Binding) => {
-  		binding.check(this._context);
+  		binding.check(this.context, this.locals);
   	});
 
   	_.forEach(this.children, childView => { 
-  		childView.detectChanges()
+  		childView.detectChanges();
   	});
 
   	const taskQueue = this._afterDetectChangesTaskQueue;

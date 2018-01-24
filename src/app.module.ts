@@ -33,17 +33,30 @@ export class HeroComponent {
 @Component({
   selector: 'my-app',
   template: `
-  		<div *ng-if="isShow">{{ title }}</div>
-  		<div (click)="show()">点我!!! {{ title }}</div>
+  		<div (click)="add()">+1S!!!</div>
+  		<div (click)="dec()">-1S!!!</div>
+
+  		<div *let-value-id="'num'" *ng-for="list">
+  			干♂死 孙乐 {{ num }}
+  		</div>
     `
 })
 export class AppComponent {
 	isShow: boolean = false;
   title = 'Tour of Heroes';
+  list = [1,2,3,4,5];
 
   show(){
   	this.isShow = !this.isShow;
   	console.log('点点点', this.isShow);
+  }
+
+  add(){
+  	this.list.push(this.list.length);
+  }
+
+  dec(){
+  	this.list.pop();
   }
 }
 

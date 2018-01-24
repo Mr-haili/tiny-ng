@@ -7,11 +7,12 @@ import _ from 'util/util';
 
 export class ViewContainer extends View {
 	constructor(
-    context: any,
     readonly anchorElement: Comment,
-    readonly viewFactory: ViewFactory
+    readonly viewFactory: ViewFactory,
+    context: any,    
+    local?: any
 	){
-    super(context);
+    super(context, local);
   }
 
   /**
@@ -41,22 +42,23 @@ export class ViewContainer extends View {
   }
 
   /**
-   * Instantiates an Embedded View based on the {@link TemplateRef `templateRef`} and inserts it
+   * Instantiates an Embedded View and inserts it
    * into this container at the specified `index`.
    *
-   * If `index` is not specified, the new View will be inserted as the last View in the container.
+   * If `index` is not specified, the new View will
+   * be inserted as the last View in the container.
    */
   createEmbeddedView(index?: number): View {
     const tmpWrapperElement: HTMLElement = document.createElement('div');
     const view = this.viewFactory.render(tmpWrapperElement);
 
     // 在这里我们重置一下view的执行上下文和宿主元素
-    console.log('日妈不科学', tmpWrapperElement, '!!!');
     view._context = this.context;
     view._hostElement = tmpWrapperElement.firstElementChild as any;
 
-    console.log('创建内嵌View', view);
+    // 将创建好的view插入到container当中
     this.insert(view);
+
     return view;
   }
 
@@ -68,7 +70,6 @@ export class ViewContainer extends View {
    * Returns the inserted View.
    */
   insert(view: View, index?: number): View {
-    console.log('!!!!!!!!viewContainer: ', view, index);
     if(0 === this.length)
     {
       insertAfter(view._hostElement, this.anchorElement);
@@ -87,7 +88,6 @@ export class ViewContainer extends View {
 
   // abstract move(view: View, currentIndex: number): View;
 
-
   indexOf(view: View): number {
   	return this.children.indexOf(view);
   }
@@ -98,7 +98,14 @@ export class ViewContainer extends View {
    * If `index` is not specified, the last View in the container will be removed.
    */
   remove(index?: number): void {
+    if(0 === this.length) return;
+    const children = this.children;
 
+    if(!index || index >= this.length)
+    {
+      let childView = this.children.pop();
+      (childView as any).destroy();
+    }
   }
 
   /**
@@ -110,8 +117,6 @@ export class ViewContainer extends View {
 }
 
 function insertAfter(newElement: Node, targetElement: Node){
-  console.log('插插插', newElement, targetElement);
-
   if(!targetElement || !targetElement.parentElement) return;
   const parent = targetElement.parentElement;
 
@@ -124,7 +129,3 @@ function insertAfter(newElement: Node, targetElement: Node){
     parent.insertBefore(newElement, targetElement.nextSibling);
   }
 }
-
-
-
-

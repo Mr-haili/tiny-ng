@@ -1,6 +1,8 @@
 import { Directive } from 'tiny-ng/core';
 import { EventEmitter } from 'tiny-ng/core/observable';
+import { View } from 'tiny-ng/ng2/view';
 import { ViewContainer } from 'tiny-ng/ng2/view-container';
+import _ from 'util/util';
 
 @Directive({
 	selector: 'ngModel',
@@ -85,13 +87,30 @@ export class NgIf {
 
 @Directive({
 	selector: 'ngFor',
-	inputs: ['ngFor']
+	inputs: ['letValueId', 'letKeyId', 'ngFor']
 })
 export class NgFor {
+	ngForOf: string;
+	letValueId: string;
+	letKeyId: string;
+
 	constructor(readonly viewContainer: ViewContainer){ }
 
-	set ngFor(value: any){
-		console.log('触发ngFor', value);
+
+	set ngFor(list: any){
+		const viewContainer = this.viewContainer,
+			expectChildCount = list.length,
+			letValueId = this.letValueId;
+
+		// 保证当前viewContainer管理的内嵌view数量和list长度相等
+		while(expectChildCount > viewContainer.length) viewContainer.createEmbeddedView();
+		while(expectChildCount < viewContainer.length) viewContainer.remove();
+
+		// 重置context!
+		_.forEach(list, (value: any, index: number) => {
+			const childView = viewContainer.get(index) as View;
+			childView.locals[letValueId] = value;
+		});
 	}
 }
 
