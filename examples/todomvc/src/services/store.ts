@@ -17,8 +17,27 @@ export class Todo {
 	}
 }
 
+type VisibilityType = 'all' | 'active' | 'completed';
+
 export class TodoStore {
 	todos: Array<Todo>;
+	visibility: VisibilityType = 'all'; 
+	filters: { [key: string]: Function } = {
+		all: function (todos: Todo[]) {
+			return todos;
+		},
+		active: function (todos: Todo[]) {
+			return todos.filter(function (todo) {
+				return !todo.completed;
+			});
+		},
+		completed: function (todos: Todo[]) {
+			return todos.filter(function (todo) {
+				return todo.completed;
+			});
+		}
+	}
+
 
 	constructor() {
 		let persistedTodos = JSON.parse(localStorage.getItem('angular2-todos') || '[]');
@@ -36,6 +55,14 @@ export class TodoStore {
 
 	private getWithCompleted(completed: Boolean) {
 		return this.todos.filter((todo: Todo) => todo.completed === completed);
+	}
+
+	get filteredTodos(): Todo[] {
+		return this.filters[this.visibility](this.todos);
+	}
+
+	setVisibility(visibility: VisibilityType){
+		this.visibility = visibility;
 	}
 
 	allCompleted() {

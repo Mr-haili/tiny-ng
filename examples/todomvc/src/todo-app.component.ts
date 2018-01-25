@@ -1,11 +1,6 @@
 import { Component } from 'tiny-ng/core';
 import { TodoStore, Todo } from './services/store';
 
-			// <footer class="footer" *ng-if="todoStore.todos.length > 0">
-			// 	<span class="todo-count"><strong>{{todoStore.getRemaining().length}}</strong> {{todoStore.getRemaining().length == 1 ? 'item' : 'items'}} left</span>
-			// 	<button class="clear-completed" *ng-if="todoStore.getCompleted().length > 0" (click)="removeCompleted()">Clear completed</button>
-			// </footer>
-
 @Component({
 	selector: 'todo-app',
 	template: `
@@ -20,9 +15,10 @@ import { TodoStore, Todo } from './services/store';
 					(keyup)="addTodo($event)">
 			</header>
 
-			<section class="main" *ng-if="todoStore.todos.length > 0">
+			<section class="main" *ng-if="todoStore.filteredTodos.length > 0">
+	
 				<input
-					class="toggle-all" 
+					class="toggle-all"
 					type="checkbox"
 					#toggleall
 					*ng-if="todoStore.todos.length"
@@ -31,7 +27,7 @@ import { TodoStore, Todo } from './services/store';
 
 				<ul class="todo-list">
 					<li 
-						*ng-for="let todo of todoStore.todos" 
+						*ng-for="let todo of todoStore.filteredTodos" 
 						[class.completed]="todo.completed" 
 						[class.editing]="todo.editing">
 
@@ -41,10 +37,28 @@ import { TodoStore, Todo } from './services/store';
 							<button class="destroy" (click)="remove(todo)"></button>
 						</div>
 
-						<input class="edit" *ng-if="todo.editing" [value]="todo.title" #editedtodo (blur)="stopEditing(todo, editedtodo.value)" (keyup.enter)="updateEditingTodo(todo, editedtodo.value)" (keyup.escape)="cancelEditingTodo(todo)">
+						<input 
+							class="edit" 
+							*ng-if="todo.editing" 
+							[value]="todo.title" #editedtodo 
+							(blur)="stopEditing(todo, editedtodo.value)" 
+							(keyup.enter)="updateEditingTodo(todo, editedtodo.value)" 
+							(keyup.escape)="cancelEditingTodo(todo)">
 					</li>
 				</ul>
 			</section>
+
+			<footer class="footer" *ng-if="todoStore.todos.length > 0">
+				<span class="todo-count"><strong>{{todoStore.getRemaining().length}}</strong> {{todoStore.getRemaining().length == 1 ? 'item' : 'items'}} left</span>
+
+				<ul class="filters">
+					<li><a (click)="todoStore.setVisibility('all')" :class="{ selected: visibility == 'all' }">All</a></li>
+					<li><a (click)="todoStore.setVisibility('active')" :class="{ selected: visibility == 'active' }">Active</a></li>
+					<li><a (click)="todoStore.setVisibility('completed')" :class="{ selected: visibility == 'completed' }">Completed</a></li>
+				</ul>
+
+				<button class="clear-completed" *ng-if="todoStore.getCompleted().length > 0" (click)="removeCompleted()">Clear completed</button>
+			</footer>
 		</section>
 	`
 })
@@ -89,7 +103,6 @@ export class TodoAppComponent {
 	}
 
 	remove(todo: Todo){
-		console.log('移除todo', todo);
 		this.todoStore.remove(todo);
 	}
 
@@ -101,9 +114,5 @@ export class TodoAppComponent {
 			this.todoStore.add(this.newTodoText);
 			this.newTodoText = '';
 		}
-	}
-
-	fuck(){
-		console.log('FUCKFUCK');
 	}
 }
