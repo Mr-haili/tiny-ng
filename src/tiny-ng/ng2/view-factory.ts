@@ -25,7 +25,7 @@ export class DirectiveFactory {
  * 这不OOP, 实现的比较奇葩
  * 2018/1/21 ng2源码里面也有不少用了这种写法, 看来不止我这么用 _(:з」∠)_
  */
-export class ViewFactory extends DirectiveFactory {
+export class EmbeddedViewFactory extends DirectiveFactory {
 	private _linkFn: NodeLinkFn | null;
 	private _isCompiled: boolean = false;
 
@@ -38,12 +38,13 @@ export class ViewFactory extends DirectiveFactory {
 	}
 
 	/*
-	 * 在容器元素上创建出组件
+	 * 在容器元素上创建出对应的组件, 因为内嵌的组件是没有其对应的专属ctrl的, 
+	 * 需要传入一个上下文来进行初始化
 	 */
-	render(hostElement: HTMLElement): View {
+	render(hostElement: HTMLElement, context: any){
 		const metadata = this.metadata;
 		hostElement.innerHTML = (metadata as any).template || '';
-		const ctrl = this.instantiateCtrl(hostElement);
+		const ctrl = _.isObject(context) ? context : this.instantiateCtrl(hostElement);
 		const view = new View(ctrl);
 
 		if(!this._isCompiled)
@@ -54,5 +55,11 @@ export class ViewFactory extends DirectiveFactory {
 		if(this._linkFn) this._linkFn(view, hostElement);
 		view._hostElement = hostElement;
 		return view;
+	}
+}
+
+export class ViewFactory extends EmbeddedViewFactory {
+	render(hostElement: HTMLElement): View {
+		return super.render(hostElement, null);
 	}
 }

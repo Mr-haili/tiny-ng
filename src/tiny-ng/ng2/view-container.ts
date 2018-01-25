@@ -1,14 +1,14 @@
 import { Component } from 'tiny-ng/core';
 import { View } from './view';
 import { Injector } from 'tiny-ng/core/';
-import { ViewFactory } from './view-factory';
+import { EmbeddedViewFactory } from './view-factory';
 import { Module } from './module';
 import _ from 'util/util';
 
 export class ViewContainer extends View {
 	constructor(
     readonly anchorElement: Comment,
-    readonly viewFactory: ViewFactory,
+    readonly embeddedViewFactory: EmbeddedViewFactory,
     context: any,    
     local?: any
 	){
@@ -50,10 +50,7 @@ export class ViewContainer extends View {
    */
   createEmbeddedView(index?: number): View {
     const tmpWrapperElement: HTMLElement = document.createElement('div');
-    const view = this.viewFactory.render(tmpWrapperElement);
-
-    // 在这里我们重置一下view的执行上下文和宿主元素
-    view._context = this.context;
+    const view = this.embeddedViewFactory.render(tmpWrapperElement, this.context);
     view._hostElement = tmpWrapperElement.firstElementChild as any;
 
     // 将创建好的view插入到container当中

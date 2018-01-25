@@ -3,7 +3,7 @@ import { ViewContainer } from './view-container';
 import { ExprFn, ActionFn } from '../types';
 import { Attributes, Bound, BoundType } from '../attributes';
 import { Directive, Provider } from 'tiny-ng/core';
-import { DirectiveFactory, ViewFactory } from './view-factory';
+import { DirectiveFactory, EmbeddedViewFactory, ViewFactory } from './view-factory';
 import { NgInterpolate } from 'tiny-ng/common/directives';
 import $interpolate from '../interpolate';
 import $parse from '../expression-parser/parse';
@@ -100,18 +100,18 @@ export class ViewCompiler {
 	}
 
 	private _compileStructuralElement(element: HTMLElement, attrs: Attributes): NodeLinkFn {
-		console.log('结构型指令编译: ', attrs.attrNames, attrs);
 		const viewContainerLinkFn = this._compileStructuralDirectivesOnViewContainer(attrs);
     const template: string = element.outerHTML; // 这里需要用outerHTML获取完整的html
-    const viewFactory: ViewFactory = new ViewFactory(this._module, { template });
+    const embeddedViewFactory: EmbeddedViewFactory = new EmbeddedViewFactory(this._module, { template });
 
 		function nodeLinkFn(view: View, element: HTMLElement){
 
 			// 替换当前元素为一个Comment作为锚点
-			const anchorElement: Comment = document.createComment('anchor');
+			const anchorElement: Comment = document.createComment(
+				`{ ${ attrs.structuralSelector } = ${ attrs.structuralExpression } }`);
 			replaceElement(anchorElement, element);
 
-			const viewContainer: ViewContainer = new ViewContainer(anchorElement, viewFactory, view._context);
+			const viewContainer: ViewContainer = new ViewContainer(anchorElement, embeddedViewFactory, view._context);
 			view.addChild(viewContainer);
 			if(viewContainerLinkFn) viewContainerLinkFn(view, viewContainer);
 		}

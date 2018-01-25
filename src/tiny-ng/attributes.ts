@@ -2,10 +2,9 @@ import _ from 'util/util';
 import { DomElementSchemaRegistry } from './dom-elemens-schema-registry';
 
 const BOUND_TYPE_REG = '';
-const NATIVE_EVENTS: any = { 
-	'click': true,
-	'bulr': true
-};
+const NATIVE_EVENTS_STR = 'click dblclick mousedown mouseup mouseover mouseout mousemove mouseenter mouseleave keydown keyup keypress submit focus blur copy cut paste';
+const NATIVE_EVENTS: any = {};
+NATIVE_EVENTS_STR.split(/\s+/).forEach(eventName => NATIVE_EVENTS[eventName] = true);
 
 const domElementSchemaRegistry = new DomElementSchemaRegistry();
 
@@ -47,6 +46,9 @@ export class Attributes {
 	private _attrs: Map<string, string> = new Map();
 	readonly attrNames: ReadonlyArray<string>;
 
+	structuralSelector: string;
+	structuralExpression: string;
+
 	/*
 	 * 解析dom上的属性, 按照[xxx] (xxx)语法, 分离出输入绑定和输出绑定
 	 * 通过isPreprocessingStructuralDirective来区分是否进行结构性指令的解析
@@ -72,6 +74,11 @@ export class Attributes {
 			{
 				if(!isPreprocessingStructuralDirective) return;
 				attrsMap.set(`[${ attr.name.slice(1) }]`, attr.value);
+
+				// TODO 这里要进行限制, 保证只能有一个结构型指令
+				this.structuralSelector = attr.name;
+				this.structuralExpression = attr.value;
+
 				element.removeAttribute(attr.name); // 移除结构型指令的属性这里是不是应该交给compiler来做
 			}
 			else
@@ -170,7 +177,7 @@ export class Attributes {
 	}
 
 	private _isNativeOutputBoundType(attrName: string): boolean {
-		return NATIVE_EVENTS[attrName] || false;
+		return !!NATIVE_EVENTS[attrName];
 	}
 
 	getInputBound(key: string) { return this.inputBoundsTable[key]; }

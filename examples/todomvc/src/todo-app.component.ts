@@ -1,6 +1,11 @@
 import { Component } from 'tiny-ng/core';
 import { TodoStore, Todo } from './services/store';
 
+			// <footer class="footer" *ng-if="todoStore.todos.length > 0">
+			// 	<span class="todo-count"><strong>{{todoStore.getRemaining().length}}</strong> {{todoStore.getRemaining().length == 1 ? 'item' : 'items'}} left</span>
+			// 	<button class="clear-completed" *ng-if="todoStore.getCompleted().length > 0" (click)="removeCompleted()">Clear completed</button>
+			// </footer>
+
 @Component({
 	selector: 'todo-app',
 	template: `
@@ -11,12 +16,12 @@ import { TodoStore, Todo } from './services/store';
 					class="new-todo" 
 					placeholder="What needs to be done?" 
 					autofocus=""
-					[(ngModel)]="newTodoText" 
+					[(ng-model)]="newTodoText" 
 					(keyup)="addTodo($event)">
 			</header>
 
 			<section class="main" *ng-if="todoStore.todos.length > 0">
-				<input 
+				<input
 					class="toggle-all" 
 					type="checkbox"
 					#toggleall
@@ -26,7 +31,7 @@ import { TodoStore, Todo } from './services/store';
 
 				<ul class="todo-list">
 					<li 
-						*ng-for="#todo of todoStore.todos" 
+						*ng-for="let todo of todoStore.todos" 
 						[class.completed]="todo.completed" 
 						[class.editing]="todo.editing">
 
@@ -40,11 +45,6 @@ import { TodoStore, Todo } from './services/store';
 					</li>
 				</ul>
 			</section>
-
-			<footer class="footer" *ng-if="todoStore.todos.length > 0">
-				<span class="todo-count"><strong>{{todoStore.getRemaining().length}}</strong> {{todoStore.getRemaining().length == 1 ? 'item' : 'items'}} left</span>
-				<button class="clear-completed" *ngIf="todoStore.getCompleted().length > 0" (click)="removeCompleted()">Clear completed</button>
-			</footer>
 		</section>
 	`
 })
@@ -89,17 +89,21 @@ export class TodoAppComponent {
 	}
 
 	remove(todo: Todo){
+		console.log('移除todo', todo);
 		this.todoStore.remove(todo);
 	}
 
 	addTodo($event: any) {
-		console.log('addTodo', $event);
-   	const code = $event.charCode || $event.keyCode;  
-
+   	const code = $event.charCode || $event.keyCode;
     if(13 !== code) return;
+
 		if (this.newTodoText.trim().length) {
 			this.todoStore.add(this.newTodoText);
 			this.newTodoText = '';
 		}
+	}
+
+	fuck(){
+		console.log('FUCKFUCK');
 	}
 }
