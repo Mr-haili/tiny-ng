@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en" data-framework="angular2">
+	<head>
+		<meta charset="utf-8">
+		<title>TinyNg • TodoMVC</title>
+		<script src="./dist/app.bundle.js"></script>
+		<link rel="stylesheet" href="./styles/base.css">
+		<link rel="stylesheet" href="./styles/index.css">
+	</head>
+	<body>
+		<div id="container">
+			<todo-app></todo-app>
+		</div>
+
+		<footer class="info">
+			<p>Double-click to edit a todo</p>
+			<p>
+				Created by <a href="http://github.com/samccone">Sam Saccone</a> and <a href="http://github.com/colineberhardt">Colin Eberhardt</a>
+				using <a href="http://angular.io">Angular2</a>
+			</p>
+			<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+		</footer>
+
+		<script>
+
+
+		</script>
+	</body>
+</html>
+
+<script type="text/javascript">
+	var container = document.getElementById('container');
+
+	console.log('渲染组件');
+	view = window.viewFactory.render(container);
+	view.detectChanges();
+</script>

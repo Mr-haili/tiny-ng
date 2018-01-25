@@ -8,7 +8,8 @@ function resolve(dir){
 module.exports = {
   entry: {
     'dist/app': './src/main.ts',
-    'examples/tiny-ng-tour-of-heroes/dist/app': './examples/tiny-ng-tour-of-heroes/src/app.module'
+    'examples/tour-of-heroes/dist/app': './examples/tour-of-heroes/src/app.module',
+    'examples/todomvc/dist/app': './examples/todomvc/src/app.module'    
   },
   output: {
     filename: "[name].bundle.js",
