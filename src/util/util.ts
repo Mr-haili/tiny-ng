@@ -83,6 +83,18 @@ function forEachRight<T>(array: ReadonlyArray<T>, iteratee: Interatee<T>): Array
   return <Array<T>>array;
 }
 
+function arrayInsert(arr: Array<any>, index: number, item: any): Array<any> {
+  if(!arr) return arr;
+  arr.splice(index, 0, item);
+  return arr;
+}
+
+function arrayRemove(arr: Array<any>, index: number): Array<any> {
+  if(!arr) return arr;
+  arr.splice(index, 1);
+  return arr;  
+}
+
 export const _ = {
 	isEqual,
 	isString,
@@ -100,7 +112,9 @@ export const _ = {
 	camelCase,
 	kebabCase,
 	forEach,
-	forEachRight
+	forEachRight,
+	arrayInsert,
+	arrayRemove
 }
 
 export default _;

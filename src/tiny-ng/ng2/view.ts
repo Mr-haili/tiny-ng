@@ -20,6 +20,7 @@ class Binding {
 
   check(context: any, locals: any): void {
   	if(!_.isObject(context)) return;
+
 		const target: any = this.target;
 
 		try{
@@ -30,7 +31,7 @@ class Binding {
 			target[this.targetProp] = this.oldValue = newValue;
 		}catch(e){
 			// throw new Error(`Error in ${this.expr.line}:${this.expr.col}:${e.message}`);
-			console.error(`表达式: ${ this.expression } 求值出错: ${ e.message }`);
+			console.error(`表达式: ${ this.expression } 求值出错: ${ e }`);
 		}
   }
 }
@@ -44,8 +45,14 @@ class View {
 	bindings: Binding[] = [];
 	_children: View[] = [];
 
+	parent: View;
+	prevSibling: View;
+	nextSibling: View;
+	childHead: View;
+	childTail: View;
+
 	constructor(
-		public _context: any, 
+		public _context: any,
 		public _locals: any = {}
 	){ }
 
@@ -57,10 +64,12 @@ class View {
 		return this._locals;
 	}
 
-	addChild(child: View): void {
-		// 递归遍历child的所有子孙重置root
+	addChild(child: View, index?: number): void {
+		if(!index || index > this._children.length) index = this._children.length;		
+
+		// 递归遍历child的所有子孙重置root, 这不是一个好实现, 但是能解决问题, 暂时先这样
 		setRootOfView(child, this.root);
-		this._children.push(child);
+		_.arrayInsert(this._children, index, child);
 		child.locals.__proto__ = this.locals;
 	}
 

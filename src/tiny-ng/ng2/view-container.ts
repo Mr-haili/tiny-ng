@@ -9,7 +9,7 @@ export class ViewContainer extends View {
 	constructor(
     readonly anchorElement: Comment,
     readonly embeddedViewFactory: EmbeddedViewFactory,
-    context: any,    
+    context: any,
     local?: any
 	){
     super(context, local);
@@ -24,7 +24,7 @@ export class ViewContainer extends View {
   }
 
   /**
-   * Returns the {@link ViewRef} for the View located in this container at the specified index.
+   * Returns the View located in this container at the specified index.
    */
   get(index: number): View | null {
   	return this._children[index];
@@ -48,14 +48,13 @@ export class ViewContainer extends View {
    * If `index` is not specified, the new View will
    * be inserted as the last View in the container.
    */
-  createEmbeddedView(index?: number): View {
+  createEmbeddedView(context?: any, index?: number): View {
     const tmpWrapperElement: HTMLElement = document.createElement('div');
-    const view = this.embeddedViewFactory.render(tmpWrapperElement, this.context);
+    const view = this.embeddedViewFactory.render(tmpWrapperElement, this.context, context);
     view._hostElement = tmpWrapperElement.firstElementChild as any;
 
     // 将创建好的view插入到container当中
-    this.insert(view);
-
+    this.insert(view, index);
     return view;
   }
 
@@ -66,20 +65,22 @@ export class ViewContainer extends View {
    *
    * Returns the inserted View.
    */
-  insert(view: View, index?: number): View {
+  insert(view: View, index?: number): View {    
+    if(!index || index > this.length) index = this.length;
+
+    console.log('insert', index);
+
     if(0 === this.length)
     {
-      insertAfter(view._hostElement, this.anchorElement);
-    }
-    else if(!index || index >= this.length)
-    {
-      insertAfter(view._hostElement, this.lastChild._hostElement);
+      elementInsertAfter(view._hostElement, this.anchorElement);
     }
     else
     {
-      insertAfter(view._hostElement, (this.get(index) as View)._hostElement);
+      elementInsertAfter(view._hostElement, (this.get(index - 1) as View)._hostElement);
     }
-    this.addChild(view);
+    this.addChild(view, index);
+
+
   	return view;
   }
 
@@ -96,13 +97,12 @@ export class ViewContainer extends View {
    */
   remove(index?: number): void {
     if(0 === this.length) return;
-    const children = this._children;
 
-    if(!index || index >= this.length)
-    {
-      let childView = this._children.pop();
-      (childView as any).destroy();
-    }
+    let childView: View;
+    if(!index || index >= this.length) index = this.length - 1;
+    childView = this._children[index] as View;
+    _.arrayRemove(this._children, index);
+    childView.destroy();
   }
 
   /**
@@ -113,7 +113,7 @@ export class ViewContainer extends View {
   // abstract detach(index?: number): View | null;
 }
 
-function insertAfter(newElement: Node, targetElement: Node){
+function elementInsertAfter(newElement: Node, targetElement: Node){
   if(!targetElement || !targetElement.parentElement) return;
   const parent = targetElement.parentElement;
 

@@ -79,6 +79,8 @@ export function $interpolate(text: string): ExprFn | null {
 			});
 		}
 
+		interpolationFn.expression = text;
+
 		return interpolationFn
 	}
 	return null;

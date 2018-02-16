@@ -34,7 +34,7 @@ export class Interpreter implements AstVisitor {
 		this._env = null;
 		this._locals = null;
 		this._result = null;
-
+		
 		return result;
 	}
 

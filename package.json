@@ -1,6 +1,6 @@
 {
-  "name": "aaa-ng",
-  "version": "1.0.0",
+  "name": "aaa-tiny-ng",
+  "version": "0.0.0-alpha",
   "description": "",
   "main": "main.js",
   "scripts": {
@@ -10,20 +10,21 @@
   "author": "aaa",
   "license": "MIT",
   "devDependencies": {
-    "@types/core-js": "^0.9.42",
+    "@types/core-js": "^0.9.46",
     "@types/jasmine": "^2.8.2",
     "@types/node": "^8.0.53",
     "@types/reflect-metadata": "0.0.5",
-    "awesome-typescript-loader": "^3.2.1",
-    "jasmine": "^2.8.0",
+    "awesome-typescript-loader": "^3.4.1",
+    "jasmine": "^2.99.0",
     "jasmine-ts": "^0.2.1",
     "ts-node": "^3.3.0",
-    "tsconfig-paths": "^2.4.0",
-    "typescript": "^2.6.1",
+    "tsconfig-paths": "^2.7.3",
+    "typescript": "^2.7.2",
     "typings": "^2.1.1"
   },
   "dependencies": {
-    "core-js": "^2.4.1",
+    "aaa-list-diff-test": "0.0.7-alpha",
+    "core-js": "^2.5.3",
     "reflect-metadata": "^0.1.10"
   }
 }

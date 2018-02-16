@@ -79,5 +79,21 @@ const env = {
 
 // import { DomElementSchemaRegistry } from 'tiny-ng/dom-elemens-schema-registry';
 // const a = new DomElementSchemaRegistry();
-// console.log(a._schema['a'], a._schema['unknown']);
+// console.log(a._schema['input']);
+
+import { ListDiffer } from 'aaa-list-diff-test';
+
+console.log('-----------');
+console.log(ListDiffer);
+console.log('-----------');
+
+const differ = new ListDiffer();
+const patchs = differ.patchMake('abcdf', 'acde');
+console.log(patchs);
+
+
+
+
+
+
 

@@ -10,8 +10,6 @@ const scope: any = new Scope();
 
 // 就是这么苟且
 function inject(func: Function){
-
-
   return () => {
     return func(new Scope());    
   }

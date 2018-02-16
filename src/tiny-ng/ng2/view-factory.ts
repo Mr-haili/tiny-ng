@@ -41,11 +41,11 @@ export class EmbeddedViewFactory extends DirectiveFactory {
 	 * 在容器元素上创建出对应的组件, 因为内嵌的组件是没有其对应的专属ctrl的, 
 	 * 需要传入一个上下文来进行初始化
 	 */
-	render(hostElement: HTMLElement, context: any){
+	render(hostElement: HTMLElement, context: any, locals?: any){
 		const metadata = this.metadata;
 		hostElement.innerHTML = (metadata as any).template || '';
 		const ctrl = _.isObject(context) ? context : this.instantiateCtrl(hostElement);
-		const view = new View(ctrl);
+		const view = new View(ctrl, locals);
 
 		if(!this._isCompiled)
 		{

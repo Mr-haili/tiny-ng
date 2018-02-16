@@ -4,6 +4,9 @@ import { View } from 'tiny-ng/ng2/view';
 import { ViewContainer } from 'tiny-ng/ng2/view-container';
 import _ from 'util/util';
 
+/* this is an another project of mine. */
+import { ListDiffer, DiffType, Diff, Patch } from 'aaa-list-diff-test';
+
 @Directive({
 	selector: 'ngModel',
 	inputs: ['ngModel'],
@@ -89,26 +92,56 @@ export class NgIf {
 	inputs: ['letValueId', 'letKeyId', 'ngForOf']
 })
 export class NgFor {
+	private _oldList: ArrayLike<any>;
+	private _differ: ListDiffer<any>;
 	letValueId: string;
 	letKeyId: string;
 
-	constructor(readonly viewContainer: ViewContainer){ }
+	constructor(readonly viewContainer: ViewContainer){
+		this._differ = new ListDiffer();
+	}
 
-
-	set ngForOf(list: any){
+	set ngForOf(newList: Array<any>){
 		const viewContainer = this.viewContainer,
-			expectChildCount = list.length,
-			letValueId = this.letValueId;
+			expectChildCount = newList.length,
+			letValueId = this.letValueId,
+			differ = this._differ,
+			oldList = this._oldList;
 
-		// 保证当前viewContainer管理的内嵌view数量和list长度相等
-		while(expectChildCount > viewContainer.length) viewContainer.createEmbeddedView();
-		while(expectChildCount < viewContainer.length) viewContainer.remove();
+		// 这里我们针对 _oldList 和 newList 做一次diff
+		const patchs: Patch<any>[] = differ.patchMake(oldList || [], newList);
+		if(0 === patchs.length) return;
 
-		// 重置context!
-		_.forEach(list, (value: any, index: number) => {
-			const childView = viewContainer.get(index) as View;
-			childView.locals[letValueId] = value;
+		console.log(patchs);
+
+		// 这里我们根据patch的内容, 进行子view操作
+		let diffs: ReadonlyArray<Diff<any>>, oldStart: number, newStart: number,
+			insDelOffset: number = 0, localInsDelOffset: number, localContext: any;
+		
+		_.forEach(patchs, patch => {
+			[oldStart, newStart, diffs] = [patch.oldStart, patch.newStart, patch.diffs];
+			localInsDelOffset = 0;
+
+			_.forEach(diffs, diff => {
+				// EQUAL
+				switch(diff.type){
+					case DiffType.INSERT:
+						localContext = { [letValueId]: diff.item };
+						viewContainer.createEmbeddedView(localContext, newStart + localInsDelOffset);
+						localInsDelOffset += 1;
+						break;
+					case DiffType.DELETE:
+						viewContainer.remove(newStart + localInsDelOffset);
+						localInsDelOffset -= 1;
+						break;
+					default:
+						// It's EQUAL! Now, we do nothing!
+						break;
+				}
+			});
 		});
+
+		this._oldList = newList.slice();
 	}
 }
 

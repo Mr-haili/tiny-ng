@@ -26,14 +26,14 @@ import { TodoStore, Todo } from './services/store';
 					(click)="todoStore.setAllTo(toggleall.checked)">
 
 				<ul class="todo-list">
-					<li 
+					<li
 						*ng-for="let todo of todoStore.filteredTodos" 
 						[class.completed]="todo.completed" 
 						[class.editing]="todo.editing">
 
 						<div class="view">
-							<input class="toggle" type="checkbox" (click)="toggleCompletion(todo)" [checked]="todo.completed">
-							<label (dblclick)="editTodo(todo)">{{todo.title}}</label>
+							<input class="toggle" type="checkbox" (click)="toggleCompletion(todo)">
+							<label (dblclick)="editTodo(todo)">{{ todo.title }}</label>
 							<button class="destroy" (click)="remove(todo)"></button>
 						</div>
 
