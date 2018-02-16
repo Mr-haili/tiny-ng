@@ -112,6 +112,8 @@ export class NgFor {
 		const patchs: Patch<any>[] = differ.patchMake(oldList || [], newList);
 		if(0 === patchs.length) return;
 
+		console.log('----------------');
+		console.log(oldList, newList);
 		console.log(patchs);
 
 		// 这里我们根据patch的内容, 进行子view操作
@@ -132,7 +134,6 @@ export class NgFor {
 						break;
 					case DiffType.DELETE:
 						viewContainer.remove(newStart + localInsDelOffset);
-						localInsDelOffset -= 1;
 						break;
 					default:
 						// It's EQUAL! Now, we do nothing!

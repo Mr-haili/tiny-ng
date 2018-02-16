@@ -66,11 +66,8 @@ export class ViewContainer extends View {
    * Returns the inserted View.
    */
   insert(view: View, index?: number): View {    
-    if(!index || index > this.length) index = this.length;
-
-    console.log('insert', index);
-
-    if(0 === this.length)
+    if(_.isNil(index) || index > this.length) index = this.length;
+    if(0 === index)
     {
       elementInsertAfter(view._hostElement, this.anchorElement);
     }
@@ -97,9 +94,8 @@ export class ViewContainer extends View {
    */
   remove(index?: number): void {
     if(0 === this.length) return;
-
     let childView: View;
-    if(!index || index >= this.length) index = this.length - 1;
+    if(_.isNil(index) || index >= this.length) index = this.length - 1;
     childView = this._children[index] as View;
     _.arrayRemove(this._children, index);
     childView.destroy();

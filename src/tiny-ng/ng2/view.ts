@@ -65,7 +65,7 @@ class View {
 	}
 
 	addChild(child: View, index?: number): void {
-		if(!index || index > this._children.length) index = this._children.length;		
+		if(_.isNil(index) || index > this._children.length) index = this._children.length;		
 
 		// 递归遍历child的所有子孙重置root, 这不是一个好实现, 但是能解决问题, 暂时先这样
 		setRootOfView(child, this.root);
