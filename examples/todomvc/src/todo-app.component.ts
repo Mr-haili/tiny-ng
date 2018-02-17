@@ -59,6 +59,7 @@ import { TodoStore, Todo } from './services/store';
 					<li><a (click)="todoStore.setVisibility('all')" :class="{ selected: visibility == 'all' }">All</a></li>
 					<li><a (click)="todoStore.setVisibility('active')" :class="{ selected: visibility == 'active' }">Active</a></li>
 					<li><a (click)="todoStore.setVisibility('completed')" :class="{ selected: visibility == 'completed' }">Completed</a></li>
+					<li><a (click)="todoStore.sort()">Sort</a></li>					
 				</ul>
 
 				<button class="clear-completed" *ng-if="todoStore.getCompleted().length > 0" (click)="removeCompleted()">Clear completed</button>

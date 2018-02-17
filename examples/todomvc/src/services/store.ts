@@ -101,4 +101,8 @@ export class TodoStore {
 		this.todos.push(new Todo(title));
 		this.updateStore();
 	}
+
+	sort(){
+		this.todos.sort((todo1, todo2) => todo1.title > todo2.title ? 1 : -1);
+	}
 }

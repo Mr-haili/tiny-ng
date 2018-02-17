@@ -88,7 +88,7 @@ console.log(ListDiffer);
 console.log('-----------');
 
 const differ = new ListDiffer();
-const patchs = differ.patchMake('abcdf', 'acde');
+const patchs = differ.patchMake('1234567', '246');
 console.log(patchs);
 
 

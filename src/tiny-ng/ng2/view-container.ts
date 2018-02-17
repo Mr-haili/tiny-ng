@@ -65,7 +65,7 @@ export class ViewContainer extends View {
    *
    * Returns the inserted View.
    */
-  insert(view: View, index?: number): View {    
+  insert(view: View, index?: number): View {
     if(_.isNil(index) || index > this.length) index = this.length;
     if(0 === index)
     {
@@ -76,8 +76,6 @@ export class ViewContainer extends View {
       elementInsertAfter(view._hostElement, (this.get(index - 1) as View)._hostElement);
     }
     this.addChild(view, index);
-
-
   	return view;
   }
 
@@ -93,20 +91,21 @@ export class ViewContainer extends View {
    * If `index` is not specified, the last View in the container will be removed.
    */
   remove(index?: number): void {
-    if(0 === this.length) return;
-    let childView: View;
-    if(_.isNil(index) || index >= this.length) index = this.length - 1;
-    childView = this._children[index] as View;
-    _.arrayRemove(this._children, index);
-    childView.destroy();
+    const childView = this.detach(index);
+    if(childView) childView.destroy();
   }
 
   /**
-   * Use along with {@link #insert} to move a View within the current container.
-   *
-   * If the `index` param is omitted, the last {@link ViewRef} is detached.
+   * If the `index` param is omitted, the last view is detached.
    */
-  // abstract detach(index?: number): View | null;
+  detach(index?: number): View | null {
+    if(0 === this.length) return null;
+    if(_.isNil(index) || index >= this.length) index = this.length - 1;
+    const childView = this._children[index] as View;
+    elementRemove(childView._hostElement);
+    _.arrayRemove(this._children, index);
+    return childView;
+  }
 }
 
 function elementInsertAfter(newElement: Node, targetElement: Node){
@@ -121,4 +120,8 @@ function elementInsertAfter(newElement: Node, targetElement: Node){
   {
     parent.insertBefore(newElement, targetElement.nextSibling);
   }
+}
+
+function elementRemove(element: Node){
+  if(element.parentNode) element.parentNode.removeChild(element);
 }
