@@ -81,19 +81,4 @@ const env = {
 // const a = new DomElementSchemaRegistry();
 // console.log(a._schema['input']);
 
-import { ListDiffer } from 'aaa-list-diff-test';
-
-console.log('-----------');
-console.log(ListDiffer);
-console.log('-----------');
-
-const differ = new ListDiffer();
-const patchs = differ.patchMake('1234567', '246');
-console.log(patchs);
-
-
-
-
-
-
-
+// 输入格式统一为一个字符串数组

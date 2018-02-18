@@ -53,12 +53,15 @@ import { TodoStore, Todo } from './services/store';
 			</section>
 
 			<footer class="footer" *ng-if="todoStore.todos.length > 0">
-				<span class="todo-count"><strong>{{todoStore.getRemaining().length}}</strong> {{todoStore.getRemaining().length == 1 ? 'item' : 'items'}} left</span>
+				<span class="todo-count">
+					<strong>{{todoStore.getRemaining().length}}</strong> 
+					{{todoStore.getRemaining().length == 1 ? 'item' : 'items'}} left
+				</span>
 
 				<ul class="filters">
-					<li><a (click)="todoStore.setVisibility('all')" :class="{ selected: visibility == 'all' }">All</a></li>
-					<li><a (click)="todoStore.setVisibility('active')" :class="{ selected: visibility == 'active' }">Active</a></li>
-					<li><a (click)="todoStore.setVisibility('completed')" :class="{ selected: visibility == 'completed' }">Completed</a></li>
+					<li><a (click)="todoStore.setVisibility('all')" [ng-class]="{ selected: todoStore.visibility == 'all' }">All</a></li>
+					<li><a (click)="todoStore.setVisibility('active')" [ng-class]="{ selected: todoStore.visibility == 'active' }">Active</a></li>
+					<li><a (click)="todoStore.setVisibility('completed')" [ng-class]="{ selected: todoStore.visibility == 'completed' }">Completed</a></li>
 					<li><a (click)="todoStore.sort()">Sort</a></li>					
 				</ul>
 

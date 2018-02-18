@@ -2,10 +2,11 @@
 function isEqual(x: any, y: any): boolean { return x === y; }
 function isString(x: any): x is string { return 'string' === typeof(x); }
 function isNumber(x: any): x is number { return 'number' === typeof(x); }
+function isArray(v: any): boolean { return v instanceof Array };
 function isNull(v: any): v is null { return v === null; }
 function isUndefined(v: any): v is undefined { return v === undefined; }
 function isNil(v: any): v is null | undefined { return v == null; }
-function isObject(v: any): boolean {
+function isObject(v: any): v is Object {
   const type = typeof v;
   return v != null && (type === 'object' || type === 'function')
 }
@@ -99,6 +100,7 @@ export const _ = {
 	isEqual,
 	isString,
 	isNumber,
+	isArray,
 	isNull,
 	isUndefined,
 	isNil,

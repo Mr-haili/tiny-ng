@@ -1,6 +1,6 @@
 import 'polyfills';
 import { Module, ModuleConfig } from 'tiny-ng/ng2/module';
-import { NgClass, NgColor, NgModel, NgIf, NgFor } from 'tiny-ng/common/directives';
+import { NgClass, NgModel, NgIf, NgFor } from 'tiny-ng/common/directives';
 
 import { AppComponent }         from './app.component';
 import { DashboardComponent }   from './dashboard.component';
@@ -10,7 +10,7 @@ import { HeroService }	        from './hero.service';
 
 const moduleConfig: ModuleConfig = {
   declarations: [ 
-    NgClass, NgColor, NgModel, NgIf, NgFor, 
+    NgClass, NgModel, NgIf, NgFor, 
     AppComponent, DashboardComponent, HeroDetailComponent, HeroesComponent
   ],
   providers: [ HeroService ]
