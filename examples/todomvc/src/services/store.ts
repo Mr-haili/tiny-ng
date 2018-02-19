@@ -7,6 +7,7 @@ export class Todo {
 		return this._title;
 	}
 	set title(value: String) {
+		if(!value) value = '';
 		this._title = value.trim();
 	}
 
@@ -37,7 +38,6 @@ export class TodoStore {
 			});
 		}
 	}
-
 
 	constructor() {
 		let persistedTodos = JSON.parse(localStorage.getItem('angular2-todos') || '[]');

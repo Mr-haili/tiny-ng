@@ -16,7 +16,6 @@ export { $parse, Scope, AstOptimizer, Ast, parser };
 import _ from 'util/util';
 import { Attributes } from 'tiny-ng/attributes';
 
-console.log('-------');
 
 // console.log('------------------');
 // console.log(parser.parseTable.print());

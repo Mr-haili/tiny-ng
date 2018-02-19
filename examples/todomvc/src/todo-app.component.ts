@@ -27,9 +27,8 @@ import { TodoStore, Todo } from './services/store';
 
 				<ul class="todo-list">
 					<li
-						*ng-for="let todo of todoStore.filteredTodos"
-						[class.completed]="todo.completed"
-						[class.editing]="todo.editing">
+						[ng-class]="{ editing: todo.editing, completed: todo.completed }"
+						*ng-for="let todo of todoStore.filteredTodos">
 
 						<div class="view">
 							<input
@@ -42,12 +41,11 @@ import { TodoStore, Todo } from './services/store';
 						</div>
 
 						<input 
-							class="edit" 
-							*ng-if="todo.editing" 
-							[value]="todo.title" #editedtodo 
-							(blur)="stopEditing(todo, editedtodo.value)" 
-							(keyup.enter)="updateEditingTodo(todo, editedtodo.value)" 
-							(keyup.escape)="cancelEditingTodo(todo)">
+							class="edit"
+							*ng-if="todo.editing"
+							[value]="todo.title"
+							(keyup)="updateOrCancelEditingTodo($event, todo)"
+							(blur)="stopEditing(todo, $event.target.value)">
 					</li>
 				</ul>
 			</section>
@@ -79,15 +77,27 @@ export class TodoAppComponent {
 	}
 
 	stopEditing(todo: Todo, editedTitle: string) {
+		if(!todo.editing) return;
 		todo.title = editedTitle;
 		todo.editing = false;
 	}
 
-	cancelEditingTodo(todo: Todo) {
-		todo.editing = false;
+	// 暂时不支持keyup.xxx的语法糖, 先苟且了
+	// keyup enter escape
+	updateOrCancelEditingTodo($event: KeyboardEvent, todo: Todo){
+		const keyCode = $event.keyCode;
+		const editedTitle = ($event.target as any).value;
+		if(13 === keyCode) 
+		{
+			this.updateEditingTodo(todo, editedTitle)
+		}
+		else if(27 === keyCode)
+		{
+			this.cancelEditingTodo(todo);
+		}
 	}
 
-	updateEditingTodo(todo: Todo, editedTitle: string) {
+	updateEditingTodo(todo: Todo, editedTitle: string){
 		editedTitle = editedTitle.trim();
 		todo.editing = false;
 
@@ -96,6 +106,10 @@ export class TodoAppComponent {
 		}
 
 		todo.title = editedTitle;
+	}
+
+	cancelEditingTodo(todo: Todo){
+		todo.editing = false;
 	}
 
 	editTodo(todo: Todo) {

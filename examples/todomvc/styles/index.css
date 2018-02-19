@@ -239,7 +239,7 @@ label[for='toggle-all'] {
 }
 
 .todo-list li .edit {
-	display: none;
+/*	display: none;*/
 }
 
 .todo-list li.editing:last-child {
