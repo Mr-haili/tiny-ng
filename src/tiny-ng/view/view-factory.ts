@@ -1,7 +1,7 @@
 import { View } from './view';
 import { Component, Directive, Type } from 'tiny-ng/core';
-import { Module } from './module';
-import { NodeLinkFn, ViewCompiler } from './view-compile';
+import { Module } from './view-compile/module';
+import { NodeLinkFn, ViewCompiler } from './view-compile/view-compile';
 import { Provider } from 'tiny-ng/core';
 import _ from 'util/util';
 

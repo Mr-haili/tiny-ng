@@ -1,7 +1,6 @@
-import _ from 'util/util';
-import $parse from './expression-parser/parse';
-import { ExprFn, ActionFn } from './types';
-import Scope from './scope';
+import { _ } from 'util/util';
+import { $parse } from 'tiny-ng/expression-parser/parse';
+import { ExprFn, ActionFn } from 'tiny-ng/types';
 
 function stringify(value: any) {
 	if (_.isNull(value) || _.isUndefined(value)) {
@@ -70,14 +69,14 @@ export function $interpolate(text: string): ExprFn | null {
 		}
 
 		// interpolationFn.expressions = expressions;
-		interpolationFn.$$watchDelegate = function(scope: Scope, listener: ActionFn) {
-			let lastValue: any;
-			return scope.$watchGroup(expressionFns, function(newValues, oldValues) {
-				var newValue = compute(newValues);
-				listener(newValue, lastValue, scope);
-				lastValue = newValue;
-			});
-		}
+		// interpolationFn.$$watchDelegate = function(scope: Scope, listener: ActionFn) {
+		// 	let lastValue: any;
+		// 	return scope.$watchGroup(expressionFns, function(newValues, oldValues) {
+		// 		var newValue = compute(newValues);
+		// 		listener(newValue, lastValue, scope);
+		// 		lastValue = newValue;
+		// 	});
+		// }
 
 		interpolationFn.expression = text;
 

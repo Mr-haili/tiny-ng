@@ -3,18 +3,15 @@ import './polyfills';
 import { Ast } from 'compile-util/tree';
 
 import Interpreter from 'compile-util/ast-interpreter/interpreter';
-
-import Scope from 'tiny-ng/scope';
-import { View } from 'tiny-ng/ng2';
+import { View } from 'tiny-ng/view';
 
 import $parse from 'tiny-ng/expression-parser/parse';
 import parser from 'tiny-ng/expression-parser/expression-grammar-config';
 
 import AstOptimizer from 'compile-util/ast-optimizer/ast-optimizer';
 
-export { $parse, Scope, AstOptimizer, Ast, parser };
+export { $parse, AstOptimizer, Ast, parser };
 import _ from 'util/util';
-import { Attributes } from 'tiny-ng/attributes';
 
 
 // console.log('------------------');

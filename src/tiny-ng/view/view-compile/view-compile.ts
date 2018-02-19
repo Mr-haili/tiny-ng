@@ -1,12 +1,13 @@
-import { View, Binding } from './view';
-import { ViewContainer } from './view-container';
-import { ExprFn, ActionFn } from '../types';
-import { Attributes, Bound, BoundType } from '../attributes';
+import { $parse } from 'tiny-ng/expression-parser/parse';
+import { 
+	Binding, View, ViewContainer, 
+	ViewFactory, DirectiveFactory, EmbeddedViewFactory 
+} from 'tiny-ng/view';
+import { ExprFn, ActionFn } from 'tiny-ng/types';
+import { Attributes, Bound, BoundType } from './attributes';
 import { Directive, Provider } from 'tiny-ng/core';
-import { DirectiveFactory, EmbeddedViewFactory, ViewFactory } from './view-factory';
 import { NgInterpolate } from 'tiny-ng/common/directives';
-import $interpolate from '../interpolate';
-import $parse from '../expression-parser/parse';
+import $interpolate from './interpolate';
 import { EventEmitter } from 'tiny-ng/core/observable';
 import { Module } from './module';
 import _ from 'util/util';
@@ -55,7 +56,7 @@ export class ViewCompiler {
 	private _module: Module;
 	compileComponent(module: Module, element: HTMLElement){
 		const preModule = this._module;
-		this._module = module;		
+		this._module = module;
 		const nodelinkFn = this._compileChildNodes(element);
 		this._module = preModule;
 		return nodelinkFn;

@@ -1,6 +1,6 @@
 import { _ } from 'util/util';
 import { Component, Directive, Injector, Provider, Type, ValueProvider, ClassProvider } from 'tiny-ng/core';
-import { ViewFactory, DirectiveFactory } from './view-factory';
+import { ViewFactory, DirectiveFactory } from 'tiny-ng/view';
 
 // TODO 这里用来识别组件和指令的方式, 有点粗暴
 export const ANNOTATIONS = '__annotations__';
@@ -8,30 +8,33 @@ const METADATA_NAME_DIRECTIVE = 'Directive';
 const METADATA_NAME_COMPONENT = 'Component';
 
 export interface ModuleConfig {
-	providers?: Array<Provider | Type<any>>
-	declarations?: Array<Type<any>>
-	imports?: Array<Type<any> | Module>
-	exports?: Array<Type<any> | any[]>
-	entryComponents?: Array<Type<any> | any[]>
-	bootstrap?: Array<Type<any> | any[]>
+	entry: string,	
+	providers?: Array<Provider | Type<any>>,
+	declarations?: Array<Type<any>>,
+	imports?: Array<Type<any> | Module>,
+	exports?: Array<Type<any> | any[]>,
+	bootstrap?: Array<Type<any> | any[]>,
 	id?: string
 }
 
 // 模块作为组织各种构建的场所
 export class Module {
 	readonly injector: Injector;
+	readonly entry: string;
 	private _directives: Map<string, Type<any>> = new Map();
 	private _components: Map<string, Type<any>> = new Map();
 
 	// 在这里所有的输入项被进行一次归一, 变成对应的provider
-	constructor(moduleConfig?: ModuleConfig){
+	constructor(config?: ModuleConfig){
 		this.injector = new Injector();
-		if(!moduleConfig) return;
+		if(!config) return;
 
-		_.forEach(moduleConfig.declarations || [], (type: Type<any>) => {
+		this.entry = config.entry;
+
+		_.forEach(config.declarations || [], (type: Type<any>) => {
 			this.declare(type);
 		});
-		_.forEach(moduleConfig.providers || [], (providerOrType: Provider | Type<any>) => {
+		_.forEach(config.providers || [], (providerOrType: Provider | Type<any>) => {
 			this.provider(providerOrType);
 		});
 	}

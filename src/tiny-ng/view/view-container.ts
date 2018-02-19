@@ -2,7 +2,7 @@ import { Component } from 'tiny-ng/core';
 import { View } from './view';
 import { Injector } from 'tiny-ng/core/';
 import { EmbeddedViewFactory } from './view-factory';
-import { Module } from './module';
+import { Module } from './view-compile/module';
 import _ from 'util/util';
 
 export class ViewContainer extends View {

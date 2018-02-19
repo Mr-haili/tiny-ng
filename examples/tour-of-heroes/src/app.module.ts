@@ -1,5 +1,6 @@
 import 'polyfills';
-import { Module, ModuleConfig } from 'tiny-ng/ng2/module';
+import { Module, ModuleConfig } from 'tiny-ng/view';
+import { bootstrap } from 'tiny-ng';
 import { NgClass, NgModel, NgIf, NgFor } from 'tiny-ng/common/directives';
 
 import { AppComponent }         from './app.component';
@@ -13,16 +14,8 @@ const moduleConfig: ModuleConfig = {
     NgClass, NgModel, NgIf, NgFor, 
     AppComponent, DashboardComponent, HeroDetailComponent, HeroesComponent
   ],
-  providers: [ HeroService ]
+  providers: [ HeroService ],
+  entry: 'my-app'
 }
-
 const appModule = new Module(moduleConfig);
-const viewFactory = appModule.component('myApp');
-
-try{
-  if(window)
-  {
-    (<any>window).viewFactory = viewFactory;
-  }
-}catch(e){}
-export class AppModule { }
+bootstrap(appModule);

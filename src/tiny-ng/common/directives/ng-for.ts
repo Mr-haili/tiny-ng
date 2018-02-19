@@ -1,7 +1,7 @@
 import { Directive } from 'tiny-ng/core';
 import { EventEmitter } from 'tiny-ng/core/observable';
-import { View } from 'tiny-ng/ng2/view';
-import { ViewContainer } from 'tiny-ng/ng2/view-container';
+import { View } from 'tiny-ng/view';
+import { ViewContainer } from 'tiny-ng/view';
 import _ from 'util/util';
 import { ListDiffer, DiffType, Diff, Patch } from 'aaa-list-diff-test';
 

@@ -1,5 +1,5 @@
 import { Directive } from 'tiny-ng/core';
-import { ViewContainer } from 'tiny-ng/ng2/view-container';
+import { ViewContainer } from 'tiny-ng/view';
 
 @Directive({
 	selector: 'ngIf',

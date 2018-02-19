@@ -1,4 +1,5 @@
 /*
+ * Copy from angular2 source code
  * 直接从ng2的源代码里面趴的 ~\(≧▽≦)/~
  */
 const BOOLEAN = 'boolean';

@@ -1,25 +1,19 @@
 import 'polyfills';
-import { Module, ModuleConfig } from 'tiny-ng/ng2/module';
+import { Module, ModuleConfig } from 'tiny-ng/view';
+import { bootstrap } from 'tiny-ng';
 import { NgClass, NgModel, NgIf, NgFor } from 'tiny-ng/common/directives';
 
-import { TodoAppComponent }     from './todo-app.component';
-import { TodoStore }	        from './services/store';
+import { TodoAppComponent } from './todo-app.component';
+import { TodoStore } from './services/store';
 
 const moduleConfig: ModuleConfig = {
   declarations: [
     NgClass, NgModel, NgIf, NgFor,
     TodoAppComponent
   ],
-  providers: [ TodoStore ]
+  providers: [ TodoStore ],
+  entry: 'todo-app'
 }
-
 const appModule = new Module(moduleConfig);
-const viewFactory = appModule.component('todoApp');
 
-try{
-  if(window)
-  {
-    (<any>window).viewFactory = viewFactory;
-  }
-}catch(e){}
-export class AppModule { }
+bootstrap(appModule);
