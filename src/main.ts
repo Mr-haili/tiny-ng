@@ -8,7 +8,6 @@ import parser from 'tiny-ng/expression-parser/expression-grammar-config';
 export { $parse, AstOptimizer, Ast, parser };
 import _ from 'util/util';
 
-// console.log('------------------');
 // console.log(parser.parseTable.print());
 
 // console.log('!!!!!!!!!!!!!!!!!');

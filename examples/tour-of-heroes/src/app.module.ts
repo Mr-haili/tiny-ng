@@ -1,18 +1,17 @@
 import { bootstrap, Module, ModuleConfig } from 'tiny-ng';
-import { NgClass, NgModel, NgIf, NgFor } from 'tiny-ng/common/directives';
 
 import { AppComponent }         from './app.component';
 import { DashboardComponent }   from './dashboard.component';
 import { HeroDetailComponent }  from './hero-detail.component';
 import { HeroesComponent }      from './heroes.component';
-import { HeroService }	        from './hero.service';
+import { HeroService }	        from './services/hero.service';
+import { PageService }          from './services/page.service';
 
 const moduleConfig: ModuleConfig = {
-  declarations: [ 
-    NgClass, NgModel, NgIf, NgFor, 
+  declarations: [
     AppComponent, DashboardComponent, HeroDetailComponent, HeroesComponent
   ],
-  providers: [ HeroService ],
+  providers: [ HeroService, PageService ],
   entry: 'my-app'
 }
 const appModule = new Module(moduleConfig);

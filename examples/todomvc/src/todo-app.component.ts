@@ -1,4 +1,4 @@
-import { Component } from 'tiny-ng/core';
+import { Component } from 'tiny-ng';
 import { TodoStore, Todo } from './services/store';
 
 @Component({

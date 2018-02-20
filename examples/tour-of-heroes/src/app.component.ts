@@ -1,27 +1,23 @@
-import { Component } from 'tiny-ng/core';
+import { Component } from 'tiny-ng';
+import { PageService } from './services/page.service';
 
 @Component({
   selector: 'my-app',
   template: `
     <h1>{{title}}</h1>
     <nav>
-      <a (click)="showDashboardPage()">Dashboard</a>
-      <a (click)="showHeroesPage()">Heroes</a>
+      <a (click)="pageService.jumpDashboard()">Dashboard</a>
+      <a (click)="pageService.jumpHeroes()">Heroes</a>
     </nav>
 
-    <dashboard *ng-if="pageName === 'dashboard'"></dashboard>
-    <heroes *ng-if="pageName === 'heroes'"></heroes>
+    <dashboard *ng-if="pageService.isDashboard()"></dashboard>
+    <heroes *ng-if="pageService.isHeroes()"></heroes>
+    <hero-detail *ng-if="pageService.isHeroDetail()"></hero-detail>
   `
 })
 export class AppComponent {
   title = 'Tour of Heroes';
-  pageName: 'dashboard' | 'heroes';
-
-  showDashboardPage(){
-    this.pageName = 'dashboard';
-  }
-
-  showHeroesPage(){
-    this.pageName = 'heroes';
-  }
+  constructor(
+    readonly pageService: PageService
+  ){ }
 }

@@ -1,6 +1,7 @@
-import { Component } from 'tiny-ng/core';
+import { Component } from 'tiny-ng';
 import { Hero } from './hero';
-import { HeroService } from './hero.service';
+import { HeroService } from './services/hero.service';
+import { PageService } from './services/page.service';
 
 @Component({
   selector: 'heroes',
@@ -8,7 +9,7 @@ import { HeroService } from './hero.service';
     <h2>My Heroes</h2>
     <ul class="heroes">
       <li *ng-for="let hero of heroes"
-        [class.selected]="hero === selectedHero"
+        [ng-class]="{ selected: hero === selectedHero }"
         (click)="onSelect(hero)">
         <span class="badge">{{hero.id}}</span> {{hero.name}}
       </li>
@@ -16,9 +17,9 @@ import { HeroService } from './hero.service';
 
     <div *ng-if="selectedHero">
       <h2>
-        {{selectedHero.name}} is my hero
+        {{ selectedHero.name }} is my hero
       </h2>
-      <button (click)="gotoDetail()">View Details</button>
+      <button (click)="pageService.jumpHeroDetail(selectedHero.id)">View Details</button>
     </div>
   `
 })
@@ -26,7 +27,10 @@ export class HeroesComponent {
   heroes: Hero[];
   selectedHero: Hero;
 
-  constructor(private heroService: HeroService){
+  constructor(
+    private heroService: HeroService,
+    private pageService: PageService
+   ){
     this.ngOnInit();
   }
 
