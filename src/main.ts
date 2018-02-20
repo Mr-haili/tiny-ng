@@ -1,18 +1,12 @@
-import './polyfills';
+import { Ast, Interpreter, AstOptimizer } from 'compile-util';
 
-import { Ast } from 'compile-util/tree';
-
-import Interpreter from 'compile-util/ast-interpreter/interpreter';
 import { View } from 'tiny-ng/view';
 
 import $parse from 'tiny-ng/expression-parser/parse';
 import parser from 'tiny-ng/expression-parser/expression-grammar-config';
 
-import AstOptimizer from 'compile-util/ast-optimizer/ast-optimizer';
-
 export { $parse, AstOptimizer, Ast, parser };
 import _ from 'util/util';
-
 
 // console.log('------------------');
 // console.log(parser.parseTable.print());

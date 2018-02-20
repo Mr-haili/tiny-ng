@@ -19,7 +19,7 @@ type ConcreteAst = Program | ExpressionStatement |
 /*
  * 仅仅做了一些简单的常量折叠工作
  */
-export default class AstOptimizer implements AstVisitor {
+export class AstOptimizer implements AstVisitor {
 	private _interpreter: Interpreter = new Interpreter();
 
 	// TODO FUCK 啊

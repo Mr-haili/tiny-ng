@@ -4,7 +4,8 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "build": "webpack -w",
+    "build": "rm -rf ./dist/* && webpack",
+    "build:p": "rm -rf ./dist/* && webpack -p",    
     "test": "jasmine-ts \"test/**/*.spec.ts\""
   },
   "author": "aaa",

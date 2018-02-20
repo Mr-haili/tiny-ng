@@ -1,6 +1,4 @@
-import Ast from 'compile-util/tree/ast';
-import Interpreter from 'compile-util/ast-interpreter/interpreter';
-import AstOptimizer from 'compile-util/ast-optimizer/ast-optimizer';
+import { Ast, Interpreter, AstOptimizer } from 'compile-util';
 import { ESTree, Expression, Constant } from 'compile-util/ast-trees';
 
 import parser from './expression-grammar-config';

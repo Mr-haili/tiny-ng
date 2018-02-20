@@ -1,6 +1,4 @@
-import 'polyfills';
-import { Module, ModuleConfig } from 'tiny-ng/view';
-import { bootstrap } from 'tiny-ng';
+import { bootstrap, Module, ModuleConfig } from 'tiny-ng';
 import { NgClass, NgModel, NgIf, NgFor } from 'tiny-ng/common/directives';
 
 import { TodoAppComponent } from './todo-app.component';

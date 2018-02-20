@@ -2,7 +2,7 @@ import Token from '../lexer/token';
 import Tree from './tree';
 import ESTree from './estree';
 
-abstract class Ast {
+export abstract class Ast {
 	abstract get children(): Array<Ast | null> | null;
 	abstract get type(): string;
 	abstract get ivalue(): string | number | null;
