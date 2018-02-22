@@ -1,14 +1,15 @@
-import { $parse } from 'tiny-ng/expression-parser/parse';
+import { $parse } from '../../expression-parser/parse';
 import { 
 	Binding, View, ViewContainer, 
 	ViewFactory, DirectiveFactory, EmbeddedViewFactory 
-} from 'tiny-ng/view';
-import { ExprFn, ActionFn } from 'tiny-ng/types';
+} from '../';
+import { ExprFn, ActionFn } from '../../types';
 import { Attributes, Bound, BoundType } from './attributes';
-import { Directive, Provider } from 'tiny-ng/core';
-import { NgInterpolate } from 'tiny-ng/common/directives';
+import { Directive, Provider } from '../../core';
+import { NgInterpolate } from '../../common/directives';
+import { EventEmitter } from '../../core/observable';
+
 import $interpolate from './interpolate';
-import { EventEmitter } from 'tiny-ng/core/observable';
 import { Module } from './module';
 import _ from 'util/util';
 

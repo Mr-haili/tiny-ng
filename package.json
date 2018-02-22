@@ -1,6 +1,6 @@
 {
   "name": "tiny-ng",
-  "version": "0.0.0-alpha",
+  "version": "0.0.4-alpha",
   "description": "a angular like mv* framework!",
   "main": "dist/tng.bundle.js",
   "types": "dist/src/tiny-ng/index.d.ts",
@@ -30,11 +30,11 @@
     "@types/jasmine": "^2.8.6",
     "@types/node": "^8.0.53",
     "@types/reflect-metadata": "0.0.5",
-    "awesome-typescript-loader": "^3.4.1",
     "jasmine": "^2.99.0",
     "jasmine-ts": "^0.2.1",
+    "ts-loader": "^3.5.0",
     "ts-node": "^3.3.0",
-    "tsconfig-paths": "^2.7.3",
+    "tsconfig-paths-webpack-plugin": "^2.0.0",
     "typescript": "^2.7.2",
     "typings": "^2.1.1",
     "webpack": "^3.11.0"

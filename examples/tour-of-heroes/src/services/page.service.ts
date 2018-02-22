@@ -1,4 +1,4 @@
-enum PageName { dashboard, heroes, heroDetail };
+export enum PageName { dashboard, heroes, heroDetail };
 
 export class PageService {
   private _curPage: PageName;

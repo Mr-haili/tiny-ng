@@ -1,5 +1,5 @@
-import { Module } from 'tiny-ng/view';
-import { NgClass, NgModel, NgIf, NgFor } from 'tiny-ng/common/directives';
+import { Module } from './view';
+import { NgClass, NgModel, NgIf, NgFor } from './common/directives';
 
 export function bootstrap(appModule: Module): void {
   document.addEventListener('DOMContentLoaded', () => {

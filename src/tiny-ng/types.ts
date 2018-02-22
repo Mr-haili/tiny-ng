@@ -3,7 +3,7 @@
  *
  * constant: 所有的基础类型, 以及成员全部是基础类型的容器类型
  */
-interface ExprFn {
+export interface ExprFn {
 	(scope?: any, locals?: any) : any,
 	expression?: string,
 	literal?: boolean,
@@ -11,11 +11,11 @@ interface ExprFn {
 	$$watchDelegate?: Function
 };
 
-type ActionFn = (newValue: any, oldValue: any, scope?: any) => any;
+export type ActionFn = (newValue: any, oldValue: any, scope?: any) => any;
 
-const initWatchVal = () => {};
+export const initWatchVal = () => {};
 
-class Watcher {
+export class Watcher {
 	oldValue: any = null;
 	newValue: any = initWatchVal;
 	isDeferred: boolean = false;
@@ -41,5 +41,3 @@ class Watcher {
 		this.listenerFn(this.newValue, this.oldValue, scope);
 	}
 }
-
-export { ActionFn, ExprFn, Watcher };

@@ -1,6 +1,6 @@
 var webpack = require('webpack');
 var path = require("path");
-var { TsConfigPathsPlugin } = require('awesome-typescript-loader');
+var TsConfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 function resolve(dir){
   return path.join(__dirname, '..', dir);
@@ -22,12 +22,13 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".json"],
     plugins: [
-      new TsConfigPathsPlugin(/* { configFileName, compiler } */)
+      new TsConfigPathsPlugin()
     ]
   },
   module: {
     rules: [
-      { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
+      // all files with a `.ts` or `.tsx` extension will be handled by `ts-loader`
+      { test: /\.tsx?$/, loader: 'ts-loader' }
     ]
   },
   // plugins:[

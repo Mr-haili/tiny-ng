@@ -1,4 +1,4 @@
-import { Directive } from 'tiny-ng/core';
+import { Directive } from '../../core';
 
 @Directive({
 	selector: 'ngColor',

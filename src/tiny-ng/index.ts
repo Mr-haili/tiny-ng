@@ -1,7 +1,9 @@
-export { $parse } from './expression-parser/parse';
+import { $parse } from './expression-parser/parse';
+
+export { $parse };
 export { bootstrap } from './bootstrap';
-export { Module, ModuleConfig } from 'tiny-ng/view';
+export { Module, ModuleConfig } from './view';
 export {
 	Provider, TypeProvider, ClassProvider, ValueProvider,
 	Component, Directive
-} from 'tiny-ng/core';
+} from './core';

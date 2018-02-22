@@ -1,6 +1,6 @@
-import $parse from 'tiny-ng/expression-parser/parse';
+import $parse from '../expression-parser/parse';
 import { ExprFn } from '../types';
-import { Directive, Component } from 'tiny-ng/core/metadata/directive';
+import { Directive, Component } from '../core/metadata/directive';
 import _ from 'util/util';
 
 // 类似于以前的watcher

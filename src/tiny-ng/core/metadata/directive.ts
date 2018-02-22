@@ -1,4 +1,4 @@
-import { TypeDecorator, makeDecorator, makeParamDecorator } from 'tiny-ng/core/decorators';
+import { TypeDecorator, makeDecorator, makeParamDecorator } from '../decorators';
 
 export interface Directive {
   selector?: string;

@@ -1,6 +1,6 @@
 import { _ } from 'util/util';
-import { $parse } from 'tiny-ng/expression-parser/parse';
-import { ExprFn, ActionFn } from 'tiny-ng/types';
+import { $parse } from '../../expression-parser/parse';
+import { ExprFn, ActionFn } from '../../types';
 
 function stringify(value: any) {
 	if (_.isNull(value) || _.isUndefined(value)) {

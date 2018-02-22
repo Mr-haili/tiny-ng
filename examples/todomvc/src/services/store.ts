@@ -18,7 +18,7 @@ export class Todo {
 	}
 }
 
-type VisibilityType = 'all' | 'active' | 'completed';
+export type VisibilityType = 'all' | 'active' | 'completed';
 
 export class TodoStore {
 	todos: Array<Todo>;

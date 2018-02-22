@@ -1,6 +1,6 @@
 import { _ } from 'util/util';
-import { Component, Directive, Injector, Provider, Type, ValueProvider, ClassProvider } from 'tiny-ng/core';
-import { ViewFactory, DirectiveFactory } from 'tiny-ng/view';
+import { Component, Directive, Injector, Provider, Type, ValueProvider, ClassProvider } from '../../core';
+import { ViewFactory, DirectiveFactory } from '../../view';
 
 // TODO 这里用来识别组件和指令的方式, 有点粗暴
 export const ANNOTATIONS = '__annotations__';

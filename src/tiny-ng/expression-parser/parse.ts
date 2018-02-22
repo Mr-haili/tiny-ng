@@ -3,7 +3,7 @@ import { ESTree, Expression, Constant } from 'compile-util/ast-trees';
 
 import parser from './expression-grammar-config';
 
-import { ExprFn, ActionFn } from 'tiny-ng/types';
+import { ExprFn, ActionFn } from '../types';
 
 const interpreter = new Interpreter();
 const astOptimizer = new AstOptimizer();
