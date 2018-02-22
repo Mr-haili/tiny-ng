@@ -10,7 +10,7 @@ const scope: any = new Scope();
 // 就是这么苟且
 function inject(func: Function){
   return () => {
-    return func(new Scope());    
+    return func(new Scope());
   }
 }
 
@@ -671,7 +671,6 @@ describe('$parse', function(){
     expect(count).toBe(1);
   });
 
-
   it('should call the function once when it is not part of the context', function() {
     const scope: any = new Scope();    
     var count = 0;
@@ -682,7 +681,6 @@ describe('$parse', function(){
     expect(scope.$eval('fn()()')).toBe('lucas');
     expect(count).toBe(1);
   });
-
 
   it('should call the function once when it is part of the context on assignments', function() {
     const scope: any = new Scope();

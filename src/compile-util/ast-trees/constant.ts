@@ -46,10 +46,10 @@ export class Constant extends Expression {
 		astVisitor.eval(this);
 	}
 
-	toJson(): any {
-		return {
-			type: this.type,
-			ivalue: this.value
-		}
-	}
+	// toJson(): any {
+	// 	return {
+	// 		type: this.type,
+	// 		ivalue: this.value
+	// 	}
+	// }
 }

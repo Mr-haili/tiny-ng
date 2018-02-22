@@ -342,7 +342,10 @@ export class Interpreter implements AstVisitor {
 	 * 同样对于CallExpression中callee为MemberExpression时,
 	 * 该CallExpression是一个方法调用, 需要获取MemberExpression中obj的值
 	 */
-	private _fetchReference(expression: MemberExpression | Identifier, isCreateOnFly: boolean = false): Reference {
+	private _fetchReference(
+		expression: MemberExpression | Identifier, 
+		isCreateOnFly: boolean = false
+	): Reference {
 		let base: any;
 		let name: string = '';
 

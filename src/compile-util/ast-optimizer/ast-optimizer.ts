@@ -21,8 +21,6 @@ type ConcreteAst = Program | ExpressionStatement |
  */
 export class AstOptimizer implements AstVisitor {
 	private _interpreter: Interpreter = new Interpreter();
-
-	// TODO FUCK 啊
 	private _placeholder: Expression = new Constant(null);
 	private _result: Expression = this._placeholder;
 
@@ -34,7 +32,6 @@ export class AstOptimizer implements AstVisitor {
 
 	optimize(ast: Ast | null): any {
 		if(null == ast) return null;
-
 		ast.accept(this);
 		return this._result;
 	}
@@ -309,11 +306,18 @@ export class AstOptimizer implements AstVisitor {
 		}
 		if(!isAllElementsConstant) return arrayExpression;
 		const value = this._interpreter.exec(arrayExpression);
-		return new Constant(value);
+
+		const constant = new Constant(value);
+		return constant;
 	}
 
-	// 成员访问表达式, 针对计算方式的成员访问
-	optimizeMemberExpression(memberExpression: MemberExpression): MemberExpression | Constant {
+	/**
+	 * 成员访问表达式, 针对计算方式的成员访问
+	 */
+	optimizeMemberExpression(
+		memberExpression: MemberExpression, 
+		isEval: boolean = true
+	): MemberExpression | Constant {
 		memberExpression.object.accept(this);
 		const object = memberExpression.object = this._result;
 		if(memberExpression.computed)
@@ -323,18 +327,29 @@ export class AstOptimizer implements AstVisitor {
 		}
 		const property = memberExpression.property;
 
-		if(object instanceof Constant && (property instanceof Constant || property instanceof Identifier))
+		if(isEval && isConstant(object) && 
+			(isConstant(property) || property instanceof Identifier))
 		{
-			return new Constant(this._interpreter.exec(memberExpression));
+			const result = this._interpreter.exec(memberExpression);
+			return new Constant(result);
 		}
 
 		return memberExpression;
 	}
 
 	optimizeCallExpression(callExpression: CallExpression): CallExpression {
-		callExpression.callee.accept(this);
-		callExpression.callee = this._result;
+		let callee = callExpression.callee;
+		if(callee instanceof MemberExpression)
+		{
+			callee = this.optimizeMemberExpression(callee, false);
+		}
+		else
+		{
+			callee.accept(this);
+			callee = this._result;
+		}
 
+		callExpression.callee = callee;
 		callExpression.arguments = callExpression.arguments.map(expression => {
 			expression.accept(this);
 			return this._result;
@@ -342,4 +357,13 @@ export class AstOptimizer implements AstVisitor {
 
 		return callExpression;
 	}
+}
+
+// 判断ast们是否为constant
+function isConstant(...asts: Ast[]): boolean {
+	for(let ast of asts)
+	{
+		if(!(ast instanceof Constant)) return false;
+	}
+	return true;
 }

@@ -8,12 +8,10 @@ import parser from 'tiny-ng/expression-parser/expression-grammar-config';
 export { $parse, AstOptimizer, Ast, parser };
 import _ from 'util/util';
 
-// console.log(parser.parseTable.print());
-
-// console.log('!!!!!!!!!!!!!!!!!');
-// const setsGenerator: any = parser.parseTable.setsGenerator;
-// const astOptimizer = new AstOptimizer();
-// console.log('************************');
+console.log('!!!!!!!!!!!!!!!!!');
+const setsGenerator: any = parser.parseTable.setsGenerator;
+const astOptimizer = new AstOptimizer();
+console.log('************************');
 
 const env = { 
 	sum: (a: number, b: number) => { return a + b; },
@@ -30,27 +28,28 @@ const env = {
 
 // [{b: 1}, 2]
 // const text: string = "true && false";
+
 // TODO BUG [1,2,3].slice(2)
-// const text: any = 'a';
-// const ast: Ast = parser.parse(text);
-// const niceAst: Ast = astOptimizer.optimize(ast);
+const text: string = '[1,2,3].slice(2)';
+const ast: Ast = parser.parse(text);
+const niceAst: Ast = astOptimizer.optimize(ast);
 
-// console.log('------源代码------');
-// console.log(text);
+console.log('------源代码------');
+console.log(text);
 
-// console.log('------ast------');
-// console.log(ast);
+console.log('------ast------');
+console.log(JSON.stringify(ast));
 
-// console.log('------nice ast------');
-// console.log(niceAst);
-// console.log('--------------------');
+console.log('------nice ast------');
+console.log(niceAst);
+console.log('--------------------');
 
 // 解释执行
-// const interpreter = new Interpreter();
-// let result: any = interpreter.exec(ast, env, { a: 666 });
+const interpreter = new Interpreter();
+let result: any = interpreter.exec(ast, env, { a: 666 });
 
-// console.log('-----计算结果------');
-// console.log(result);
+console.log('-----计算结果------');
+console.log(result);
 
 // const f = $parse(text);
 // console.log(f, f.literal, f.constant, result);
@@ -66,8 +65,4 @@ const env = {
 
 // console.log(_.camelCase('aaa.bbb.ccc'));
 
-// import { DomElementSchemaRegistry } from 'tiny-ng/dom-elemens-schema-registry';
-// const a = new DomElementSchemaRegistry();
-// console.log(a._schema['input']);
 
-// 输入格式统一为一个字符串数组
