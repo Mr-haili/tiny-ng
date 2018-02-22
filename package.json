@@ -1,18 +1,33 @@
 {
-  "name": "aaa-tiny-ng",
+  "name": "tiny-ng",
   "version": "0.0.0-alpha",
-  "description": "",
-  "main": "main.js",
+  "description": "a angular like mv* framework!",
+  "main": "dist/tng.bundle.js",
+  "types": "dist/src/tiny-ng/index.d.ts",
   "scripts": {
-    "build": "rm -rf ./dist/* && webpack",
-    "build:p": "rm -rf ./dist/* && webpack -p",    
+    "prepare": "npm run build:p",
+    "prebuild": "npm run clean",
+    "build": "node_modules/.bin/webpack",
+    "build:p": "node_modules/.bin/webpack -p",
+    "clean": "rm -rf ./dist && mkdir ./dist",
+    "build:watch": "node_modules/.bin/webpack -w",
     "test": "jasmine-ts \"test/**/*.spec.ts\""
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mr-haili/tiny-ng"
+  },
+  "keywords": [
+    "angular",
+    "typescript"
+  ],
   "author": "aaa",
+  "email": "120000456@qq.com",
+  "homepage": "https://github.com/Mr-haili/tiny-ng",
   "license": "MIT",
   "devDependencies": {
     "@types/core-js": "^0.9.46",
-    "@types/jasmine": "^2.8.2",
+    "@types/jasmine": "^2.8.6",
     "@types/node": "^8.0.53",
     "@types/reflect-metadata": "0.0.5",
     "awesome-typescript-loader": "^3.4.1",
@@ -21,10 +36,11 @@
     "ts-node": "^3.3.0",
     "tsconfig-paths": "^2.7.3",
     "typescript": "^2.7.2",
-    "typings": "^2.1.1"
+    "typings": "^2.1.1",
+    "webpack": "^3.11.0"
   },
   "dependencies": {
-    "aaa-list-diff-test": "0.0.11-alpha",
+    "aaa-list-diff": "0.0.5-alpha",
     "core-js": "^2.5.3",
     "reflect-metadata": "^0.1.10"
   }

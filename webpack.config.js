@@ -8,7 +8,7 @@ function resolve(dir){
 
 module.exports = {
   entry: {
-    'dist/tng': './src/main.ts',
+    'dist/tng': './src/tiny-ng/index',
     'dist/tng-polyfills': './src/polyfills',
     'examples/tour-of-heroes/dist/app': './examples/tour-of-heroes/src/app.module',
     'examples/todomvc/dist/app': './examples/todomvc/src/app.module'    

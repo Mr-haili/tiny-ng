@@ -3,7 +3,7 @@ import { EventEmitter } from 'tiny-ng/core/observable';
 import { View } from 'tiny-ng/view';
 import { ViewContainer } from 'tiny-ng/view';
 import _ from 'util/util';
-import { ListDiffer, DiffType, Diff, Patch } from 'aaa-list-diff-test';
+import { ListDiffer, DiffType, Diff, Patch } from 'aaa-list-diff';
 
 @Directive({
 	selector: 'ngFor',

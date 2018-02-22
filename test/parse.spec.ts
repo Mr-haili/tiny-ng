@@ -2,6 +2,7 @@
  * copy from https://github.com/angular/angular.js/blob/master/test/ng/parseSpec.js
  * ~\(≧▽≦)/~
  */
+import {} from 'jasmine';
 import { Scope } from '../src/tiny-ng/scope';
 import { $parse } from '../src/tiny-ng';
 
