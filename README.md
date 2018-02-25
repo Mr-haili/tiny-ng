@@ -14,6 +14,8 @@
 - [ ] 完善测试用例
 - [ ] 生命周期hook
 
+## [how to use?请在最新版本的chrome下打开](https://mr-haili.github.io/tiny-ng-demo/examples/how-to-use/how-to-use.html)
+
 ## [demo](https://github.com/Mr-haili/tiny-ng-demo/tree/gh-pages)
 因为现在还不支持路由功能, 生命周期hook与异步相关的处理, 代码做了一些修改, 
 请在最新版本的chrome下打开:
@@ -24,7 +26,7 @@
 作者QQ: 120000456@qq.com
 您有任何意见和建议, 可以给我issue, 或者直接联系我, 您宝贵的意见将帮助我完善这个不成熟的项目.
 
-## 示例代码(来自上面的demo)
+## 一些示例代码(来自上面的demo)
 ```typescript
 import { Component }    from 'tiny-ng';
 import { Hero }         from './hero';
@@ -87,22 +89,18 @@ import { PageService } from './services/page.service';
 export class HeroesComponent {
   heroes: Hero[];
   selectedHero: Hero;
-
   constructor(
     private heroService: HeroService,
     private pageService: PageService
    ){
     this.ngOnInit();
   }
-
   getHeroes(): void {
     this.heroes = this.heroService.getHeroes();
   }
-
   ngOnInit(): void {
     this.getHeroes();
   }
-
   onSelect(hero: Hero): void {
     this.selectedHero = hero;
   }
