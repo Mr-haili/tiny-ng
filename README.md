@@ -26,7 +26,6 @@
 作者QQ: 120000456@qq.com
 您有任何意见和建议, 可以给我issue, 或者直接联系我, 您宝贵的意见将帮助我完善这个不成熟的项目.
 
-## [求职中, 简历点我](https://mr-haili.github.io/resume/resume_frontend_HeHongRu.pdf)
 
 ## 一些示例代码(来自上面的demo)
 ```typescript
